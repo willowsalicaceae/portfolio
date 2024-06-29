@@ -1,0 +1,708 @@
+<file path="src\App.js">
+import React from 'react';
+import { BrowserRouter as Router, Route, Link, Routes } from 'react-router-dom';
+import { Box, Grid, Typography, CssBaseline, CssVarsProvider } from '@mui/joy';
+import Header from './components/Header';
+import About from './pages/About';
+import Work from './pages/Work';
+import Contact from './pages/Contact';
+import WorkDetails from './pages/WorkDetails';
+import theme from './theme';
+
+const App = () => {
+  return (
+    <CssVarsProvider theme={theme}>
+      <CssBaseline />
+      <Router>
+        <Header />
+        <Box sx={{ px: 3, py: 2 }}>
+          <Routes>
+            <Route path="/work" element={<Work />} />
+            <Route path="/work/:id" element={<WorkDetails />} />
+            <Route path="/contact" element={<Contact />} />
+            <Route path="/" element={<About />} />
+          </Routes>
+        </Box>
+      </Router>
+    </CssVarsProvider>
+  );
+};
+
+export default App;
+</file>
+
+<file path="src\App.test.js">
+import { render, screen } from '@testing-library/react';
+import App from './App';
+
+test('renders learn react link', () => {
+  render(<App />);
+  const linkElement = screen.getByText(/learn react/i);
+  expect(linkElement).toBeInTheDocument();
+});
+
+</file>
+
+<file path="src\index.js">
+import React from 'react';
+import ReactDOM from 'react-dom/client';
+import './index.css';
+import App from './App';
+import reportWebVitals from './reportWebVitals';
+
+const root = ReactDOM.createRoot(document.getElementById('root'));
+root.render(
+  <React.StrictMode>
+    <App />
+  </React.StrictMode>
+);
+
+// If you want to start measuring performance in your app, pass a function
+// to log results (for example: reportWebVitals(console.log))
+// or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
+reportWebVitals();
+
+</file>
+
+<file path="src\reportWebVitals.js">
+const reportWebVitals = onPerfEntry => {
+  if (onPerfEntry && onPerfEntry instanceof Function) {
+    import('web-vitals').then(({ getCLS, getFID, getFCP, getLCP, getTTFB }) => {
+      getCLS(onPerfEntry);
+      getFID(onPerfEntry);
+      getFCP(onPerfEntry);
+      getLCP(onPerfEntry);
+      getTTFB(onPerfEntry);
+    });
+  }
+};
+
+export default reportWebVitals;
+
+</file>
+
+<file path="src\setupTests.js">
+// jest-dom adds custom jest matchers for asserting on DOM nodes.
+// allows you to do things like:
+// expect(element).toHaveTextContent(/react/i)
+// learn more: https://github.com/testing-library/jest-dom
+import '@testing-library/jest-dom';
+
+</file>
+
+<file path="src\theme.js">
+
+import { extendTheme } from '@mui/joy/styles';
+
+const theme = extendTheme({
+  "colorSchemes": {
+    "light": {
+      "palette": {
+        "primary": {
+          "50": "#ecfdf5",
+          "100": "#d1fae5",
+          "200": "#a7f3d0",
+          "300": "#6ee7b7",
+          "400": "#34d399",
+          "500": "#10b981",
+          "600": "#059669",
+          "700": "#047857",
+          "800": "#065f46",
+          "900": "#064e3b"
+        },
+        "danger": {
+          "50": "#fff1f2",
+          "100": "#ffe4e6",
+          "200": "#fecdd3",
+          "300": "#fda4af",
+          "400": "#fb7185",
+          "500": "#f43f5e",
+          "600": "#e11d48",
+          "700": "#be123c",
+          "800": "#9f1239",
+          "900": "#881337"
+        },
+        "success": {
+          "50": "#f7fee7",
+          "100": "#ecfccb",
+          "200": "#d9f99d",
+          "300": "#bef264",
+          "400": "#a3e635",
+          "500": "#84cc16",
+          "600": "#65a30d",
+          "700": "#4d7c0f",
+          "800": "#3f6212",
+          "900": "#365314"
+        },
+        "warning": {
+          "50": "#fffbeb",
+          "100": "#fef3c7",
+          "200": "#fde68a",
+          "300": "#fcd34d",
+          "400": "#fbbf24",
+          "500": "#f59e0b",
+          "600": "#d97706",
+          "700": "#b45309",
+          "800": "#92400e",
+          "900": "#78350f"
+        }
+      }
+    },
+    "dark": {
+      "palette": {
+        "primary": {
+          "50": "#ecfdf5",
+          "100": "#d1fae5",
+          "200": "#a7f3d0",
+          "300": "#6ee7b7",
+          "400": "#34d399",
+          "500": "#10b981",
+          "600": "#059669",
+          "700": "#047857",
+          "800": "#065f46",
+          "900": "#064e3b"
+        },
+        "danger": {
+          "50": "#fff1f2",
+          "100": "#ffe4e6",
+          "200": "#fecdd3",
+          "300": "#fda4af",
+          "400": "#fb7185",
+          "500": "#f43f5e",
+          "600": "#e11d48",
+          "700": "#be123c",
+          "800": "#9f1239",
+          "900": "#881337"
+        },
+        "success": {
+          "50": "#f7fee7",
+          "100": "#ecfccb",
+          "200": "#d9f99d",
+          "300": "#bef264",
+          "400": "#a3e635",
+          "500": "#84cc16",
+          "600": "#65a30d",
+          "700": "#4d7c0f",
+          "800": "#3f6212",
+          "900": "#365314"
+        },
+        "warning": {
+          "50": "#fffbeb",
+          "100": "#fef3c7",
+          "200": "#fde68a",
+          "300": "#fcd34d",
+          "400": "#fbbf24",
+          "500": "#f59e0b",
+          "600": "#d97706",
+          "700": "#b45309",
+          "800": "#92400e",
+          "900": "#78350f"
+        }
+      }
+    }
+  }
+})
+
+export default theme;
+</file>
+
+<file path="src\components\Header.js">
+import * as React from 'react';
+import { useColorScheme } from '@mui/joy/styles';
+import Box from '@mui/joy/Box';
+import IconButton from '@mui/joy/IconButton';
+import Stack from '@mui/joy/Stack';
+import Button from '@mui/joy/Button';
+import Tooltip from '@mui/joy/Tooltip';
+import { Link } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
+
+import DarkModeRoundedIcon from '@mui/icons-material/DarkModeRounded';
+import LightModeRoundedIcon from '@mui/icons-material/LightModeRounded';
+
+function ColorSchemeToggle() {
+  const { mode, setMode } = useColorScheme();
+  const [mounted, setMounted] = React.useState(false);
+  React.useEffect(() => {
+    setMounted(true);
+  }, []);
+  if (!mounted) {
+    return <IconButton size="sm" variant="outlined" color="primary" />;
+  }
+  return (
+    <Tooltip title="Change theme" variant="outlined">
+      <IconButton
+        id="toggle-mode"
+        size="sm"
+        variant="plain"
+        color="neutral"
+        sx={{ alignSelf: 'center' }}
+        onClick={() => {
+          if (mode === 'light') {
+            setMode('dark');
+          } else {
+            setMode('light');
+          }
+        }}
+      >
+        {mode === 'light' ? <DarkModeRoundedIcon /> : <LightModeRoundedIcon />}
+      </IconButton>
+    </Tooltip>
+  );
+}
+
+export default function Header() {
+  const { pathname } = useLocation();
+  console.log(pathname)
+  return (
+    <Box
+      sx={[
+        {
+          p: 2,
+          gap: 2,
+          bgcolor: 'background.surface',
+          display: 'flex',
+          flexDirection: 'row',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+          gridColumn: '1 / -1',
+          borderBottom: '1px solid',
+          borderColor: 'divider',
+          position: 'sticky',
+          top: 0,
+          zIndex: 1100,
+        }
+      ]}
+    >
+      <Box
+        sx={{
+          display: 'flex',
+          flexGrow: 1,
+          justifyContent: 'space-between',
+        }}
+      >
+        <Stack
+          direction="row"
+          justifyContent="center"
+          alignItems="center"
+          spacing={1}
+          sx={{ display: { xs: 'none', sm: 'flex' } }}
+        >
+          <Button
+            variant="plain"
+            color="neutral"
+            aria-pressed={pathname === '/'}
+            component={Link}
+            to="/"
+            size="sm"
+            sx={{ alignSelf: 'center' }}
+          >
+            About
+          </Button>
+          <Button
+            variant="plain"
+            color="neutral"
+            aria-pressed={pathname === '/work/'}
+            component={Link}
+            to="/work/"
+            size="sm"
+            sx={{ alignSelf: 'center' }}
+          >
+            Work
+          </Button>
+          <Button
+            variant="plain"
+            color="neutral"
+            aria-pressed={pathname === '/contact/'}
+            component={Link}
+            to="/contact/"
+            size="sm"
+            sx={{ alignSelf: 'center' }}
+          >
+            Contact
+          </Button>
+        </Stack>
+        <Box
+          sx={{
+            display: 'flex',
+            flexDirection: 'row',
+            gap: 1.5,
+            alignItems: 'center',
+          }}
+        >
+
+          <Box></Box><ColorSchemeToggle />
+        </Box>
+      </Box>
+    </Box>
+  );
+}
+</file>
+
+<file path="src\components\WorkForm.js">
+import { useState } from 'react';
+import { Box, Button, Textarea, Typography } from '@mui/joy';
+
+const WorkForm = ({ onSubmit }) => {
+  const [portfolioData, setPortfolioData] = useState('');
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+
+    const workPattern = /(.+)\n(.+) - (.+)\n(.+)\n(.+)\n(.+)\n(.+)?\n(.+)?/g;
+    const itemPattern = /([^,]+)/g;
+
+    const works = [];
+
+    let match;
+    while ((match = workPattern.exec(portfolioData)) !== null) {
+      const [, id, subtitle, title, date, url, description, tagsString = '', softwareString = ''] = match;
+
+      const tags = (tagsString.match(itemPattern) || []).map((tag) => tag.trim());
+      const software = (softwareString.match(itemPattern) || []).map((sw) => sw.trim());
+
+      const work = {
+        id,
+        subtitle: subtitle.trim(),
+        title: title.trim(),
+        date: date.trim(),
+        url: url.trim(),
+        description: description.trim(),
+        tags,
+        software,
+      };
+
+      works.push(work);
+    }
+
+    onSubmit(works);
+
+    // Download the JSON file
+    const jsonString = JSON.stringify(works, null, 2);
+    const blob = new Blob([jsonString], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = 'portfolioData.json';
+    link.click();
+    URL.revokeObjectURL(url);
+
+    setPortfolioData('');
+  };
+
+  return (
+    <Box component="form" onSubmit={handleSubmit}>
+      <Typography level="h2">Add Portfolio Data</Typography>
+      <Textarea
+        value={portfolioData}
+        onChange={(e) => setPortfolioData(e.target.value)}
+        minRows={10}
+        placeholder="Paste portfolio data here"
+      />
+      <Button type="submit">Submit</Button>
+    </Box>
+  );
+};
+
+export default WorkForm;
+</file>
+
+<file path="src\components\WorkList.js">
+import React from 'react';
+import { Link } from 'react-router-dom';
+import { Box, Grid, Card, CardCover, CardContent, Typography } from '@mui/joy';
+
+const WorkList = ({ works }) => {
+  return (
+    <Box>
+      <Grid container spacing={2}>
+        {works.map((work) => (
+          <Grid key={work.id} xs={12} sm={6} md={4}>
+            <Link to={`/work/${work.id}`}>
+              <Card
+                sx={{
+                  position: 'relative',
+                  overflow: 'hidden',
+                  paddingTop: '50%',
+                  '&:hover .overlay': {
+                    opacity: 1,
+                  },
+                  '&:hover .card-content': {
+                    opacity: 1,
+                  },
+                }}
+              >
+                <CardCover
+                  sx={{
+                    position: 'absolute',
+                    top: 0,
+                    left: 0,
+                    width: '100%',
+                    height: '100%',
+                  }}
+                >
+                  <img
+                    src={`/images/thumbnails/${work.id}.jpg`}
+                    srcSet={`/images/thumbnails/${work.id}.jpg 2x`}
+                    loading="lazy"
+                    alt={work.title}
+                    style={{ objectFit: 'cover', width: '100%', height: '100%' }}
+                  />
+                  <Box
+                    className="overlay"
+                    sx={{
+                      position: 'absolute',
+                      top: 0,
+                      left: 0,
+                      width: '100%',
+                      height: '100%',
+                      background: 'linear-gradient(to bottom, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.8))',
+                      opacity: 0,
+                      transition: 'opacity 0.3s',
+                    }}
+                  />
+                </CardCover>
+                <CardContent
+                  className="card-content"
+                  sx={{
+                    position: 'absolute',
+                    bottom: 0,
+                    left: 0,
+                    width: '100%',
+                    opacity: 0,
+                    transition: 'opacity 0.3s',
+                    color: '#fff',
+                    padding: 2,
+                    '& .MuiTypography-root': {
+                      color: '#fff',
+                    },
+                  }}
+                >
+                  <Typography level="h3">{work.title}</Typography>
+                  <Typography level="body2">{work.subtitle}</Typography>
+                </CardContent>
+              </Card>
+            </Link>
+          </Grid>
+        ))}
+      </Grid>
+    </Box>
+  );
+};
+
+export default WorkList;
+</file>
+
+<file path="src\data\portfolioData.js">
+const portfolioData = [
+  {
+    "id": "cornerofmyeyeradioedit",
+    "subtitle": "Dizzy Spins & Landon Sears",
+    "title": "Corner of My Eye (Radio Edit)",
+    "date": "Apr 10, 2024",
+    "url": "https://www.youtube.com/watch?v=bWBdWwz6k2s",
+    "description": "Created visualizer",
+    "tags": [
+      "Visualizer",
+      " Music"
+    ],
+    "software": [
+      "After Effects",
+      " Photoshop"
+    ]
+  },
+  {
+    "id": "onenightout",
+    "subtitle": "Dizzy Spins",
+    "title": "One Night Out",
+    "date": "Feb 10, 2024",
+    "url": "https://www.youtube.com/watch?v=OxVBComxisI",
+    "description": "Created visualizer",
+    "tags": [
+      "Visualizer",
+      " Music"
+    ],
+    "software": [
+      "After Effects",
+      " Photoshop"
+    ]
+  },
+  {
+    "id": "falsepermanence",
+    "subtitle": "Dizzy Spins",
+    "title": "False Permanence",
+    "date": "Feb 6, 2024",
+    "url": "https://www.youtube.com/watch?v=-elwaC0Cciw",
+    "description": "Created visualizer",
+    "tags": [
+      "Visualizer",
+      " Music"
+    ],
+    "software": [
+      "After Effects",
+      " Photoshop"
+    ]
+  },
+  {
+    "id": "chatbotcemetery",
+    "subtitle": "UW INFO 350",
+    "title": "Chatbot Cemetery",
+    "date": "Mar 9, 2023",
+    "url": "https://chatbotcemetery.com/",
+    "description": "Created website",
+    "tags": [
+      "Web Development",
+      " School Project"
+    ],
+    "software": [
+      "React"
+    ]
+  },
+  {
+    "id": "weatherheatmap",
+    "subtitle": "UW INFO 474",
+    "title": "Weather Heatmap",
+    "date": "Jun 7, 2023",
+    "url": "https://github.com/willowsalicaceae/weather-heatmap",
+    "description": "Created website",
+    "tags": [
+      "Web Development",
+      " School Project"
+    ],
+    "software": [
+      "D3"
+    ]
+  },
+  {
+    "id": "covid67",
+    "subtitle": "UW iSchool Capstone",
+    "title": "Virufy Cough Annotator",
+    "date": "May 15, 2023",
+    "url": "https://willowsalicaceae.github.io/virufyCapstone/",
+    "description": "Designed website, created demonstration video",
+    "tags": [
+      "Web Development",
+      " School Project"
+    ],
+    "software": [
+      "React",
+      " Node"
+    ]
+  },
+  {
+    "id": "walkseattle",
+    "subtitle": "UW INFO 442",
+    "title": "WalkSeattle",
+    "date": "Jun 4, 2024",
+    "url": "https://github.com/willowsalicaceae/walk-seattle",
+    "description": "Developed website",
+    "tags": [
+      "Web Development",
+      " School Project"
+    ],
+    "software": [
+      "React",
+      " Node"
+    ]
+  }
+];
+
+export default portfolioData;
+</file>
+
+<file path="src\pages\About.js">
+import React from 'react';
+import { Box, Typography } from '@mui/joy';
+
+const About = () => {
+  return (
+    <Box>
+      <Typography level="h1">About Me</Typography>
+      <Typography>
+        Coming soon!
+      </Typography>
+    </Box>
+  );
+};
+
+export default About;
+</file>
+
+<file path="src\pages\Contact.js">
+import React from 'react';
+import { Box, Typography } from '@mui/joy';
+
+const Contact = () => {
+  return (
+    <Box>
+      <Typography level="h1">Contact Me</Typography>
+      <Typography>
+        Coming soon!
+      </Typography>
+    </Box>
+  );
+};
+
+export default Contact;
+</file>
+
+<file path="src\pages\Work.js">
+import { useState, useEffect } from 'react';
+import { Box, Typography } from '@mui/joy';
+import WorkForm from '../components/WorkForm';
+import WorkList from '../components/WorkList';
+import portfolioData from '../data/portfolioData';
+
+const Work = () => {
+  const [works, setWorks] = useState([]);
+
+  useEffect(() => {
+    setWorks(portfolioData);
+  }, []);
+
+  const handleAddWork = (newWorks) => {
+    setWorks(newWorks);
+  };
+
+  return (
+    <Box>
+      <Typography level="h1">My Work</Typography>
+      <WorkForm onSubmit={handleAddWork} />
+      <WorkList works={works} />
+    </Box>
+  );
+};
+
+export default Work;
+</file>
+
+<file path="src\pages\WorkDetails.js">
+import React from 'react';
+import { useParams } from 'react-router-dom';
+import { Box, Typography } from '@mui/joy';
+import portfolioData from '../data/portfolioData';
+
+const WorkDetails = () => {
+  const { id } = useParams();
+  const work = portfolioData.find((work) => work.id === id);
+
+  if (!work) {
+    return <Typography>Work not found</Typography>;
+  }
+
+  return (
+    <Box>
+      <Typography level="h1">{work.title}</Typography>
+      <Typography level="h2">{work.subtitle}</Typography>
+      <img src={`/images/thumbnails/${work.id}.jpg`} alt={work.title} />
+      <Typography>Date: {work.date}</Typography>
+      <Typography>URL: {work.url}</Typography>
+      <Typography>Description: {work.description}</Typography>
+      <Typography>Tags: {work.tags.join(', ')}</Typography>
+      <Typography>Software: {work.software.join(', ')}</Typography>
+    </Box>
+  );
+};
+
+export default WorkDetails;
+</file>
