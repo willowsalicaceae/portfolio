@@ -339,6 +339,90 @@ export default function Header() {
 }
 </file>
 
+<file path="src\components\WorkControls.js">
+import React from 'react';
+import { Box, Select, Option, Chip, Radio, RadioGroup, FormControl, FormLabel } from '@mui/joy';
+import CheckIcon from '@mui/icons-material/Check';
+
+const WorkControls = ({ sortBy, onSortChange, tags, selectedTag, onTagChange }) => {
+  return (
+    <Box sx={{ display: 'flex', gap: 4, alignItems: 'flex-end', mb: 2 }}>
+      <FormControl>
+        <FormLabel>Sort by</FormLabel>
+        <Select value={sortBy} onChange={(e, newValue) => onSortChange(newValue)}>
+          <Option value="relevancy">Relevancy</Option>
+          <Option value="date">Date</Option>
+        </Select>
+      </FormControl>
+      <FormControl>
+        <FormLabel>Filter by tag</FormLabel>
+        <RadioGroup
+          name="filter-tags"
+          value={selectedTag}
+          onChange={(event) => onTagChange(event.target.value)}
+          sx={{
+            display: 'flex',
+            flexDirection: 'row',
+            flexWrap: 'wrap',
+            gap: 1,
+            margin: 0,
+            pb: "1px",
+          }}
+        >
+          <Chip
+            variant="plain"
+            color={selectedTag === '' ? 'primary' : 'neutral'}
+            startDecorator={
+              selectedTag === '' && <CheckIcon sx={{ zIndex: 1, pointerEvents: 'none' }} />
+            }
+            sx={{
+              "--Chip-minHeight": "34px",
+
+            }}
+          >
+            <Radio
+              variant="outlined"
+              color={selectedTag === '' ? 'primary' : 'neutral'}
+              disableIcon
+              overlay
+              label="All"
+              value=""
+            />
+          </Chip>
+          {tags.map((tag) => {
+            const checked = selectedTag === tag;
+            return (
+              <Chip
+                key={tag}
+                variant="plain"
+                color={checked ? 'primary' : 'neutral'}
+                startDecorator={
+                  checked && <CheckIcon sx={{ zIndex: 1, pointerEvents: 'none' }} />
+                }
+                sx={{
+                  "--Chip-minHeight": "34px"
+                }}
+              >
+                <Radio
+                  variant="outlined"
+                  color={checked ? 'primary' : 'neutral'}
+                  disableIcon
+                  overlay
+                  label={tag}
+                  value={tag}
+                />
+              </Chip>
+            );
+          })}
+        </RadioGroup>
+      </FormControl>
+    </Box>
+  );
+};
+
+export default WorkControls;
+</file>
+
 <file path="src\components\WorkForm.js">
 import { useState } from 'react';
 import { Box, Button, Textarea, Typography } from '@mui/joy';
@@ -509,7 +593,8 @@ const portfolioData = [
     "software": [
       "After Effects",
       " Photoshop"
-    ]
+    ],
+    "relevancy": 8
   },
   {
     "id": "onenightout",
@@ -525,7 +610,8 @@ const portfolioData = [
     "software": [
       "After Effects",
       " Photoshop"
-    ]
+    ],
+    "relevancy": 8
   },
   {
     "id": "falsepermanence",
@@ -556,7 +642,8 @@ const portfolioData = [
     ],
     "software": [
       "React"
-    ]
+    ],
+    "relevancy": 5
   },
   {
     "id": "weatherheatmap",
@@ -571,7 +658,8 @@ const portfolioData = [
     ],
     "software": [
       "D3"
-    ]
+    ],
+    "relevancy": 6
   },
   {
     "id": "covid67",
@@ -587,7 +675,8 @@ const portfolioData = [
     "software": [
       "React",
       " Node"
-    ]
+    ],
+    "relevancy": 6
   },
   {
     "id": "walkseattle",
@@ -603,7 +692,8 @@ const portfolioData = [
     "software": [
       "React",
       " Node"
-    ]
+    ],
+    "relevancy": 9
   }
 ];
 
@@ -651,10 +741,13 @@ import { useState, useEffect } from 'react';
 import { Box, Typography } from '@mui/joy';
 import WorkForm from '../components/WorkForm';
 import WorkList from '../components/WorkList';
+import WorkControls from '../components/WorkControls';
 import portfolioData from '../data/portfolioData';
 
 const Work = () => {
   const [works, setWorks] = useState([]);
+  const [sortBy, setSortBy] = useState('relevancy');
+  const [selectedTag, setSelectedTag] = useState('');
 
   useEffect(() => {
     setWorks(portfolioData);
@@ -664,11 +757,39 @@ const Work = () => {
     setWorks(newWorks);
   };
 
+  const handleSortChange = (newSortBy) => {
+    setSortBy(newSortBy);
+  };
+
+  const handleTagChange = (tag) => {
+    setSelectedTag(tag);
+  };
+
+  const sortedAndFilteredWorks = works
+    .filter((work) => selectedTag === '' || work.tags.includes(selectedTag))
+    .sort((a, b) => {
+      if (sortBy === 'relevancy') {
+        return b.relevancy - a.relevancy;
+      } else if (sortBy === 'date') {
+        return new Date(b.date) - new Date(a.date);
+      }
+      return 0;
+    });
+
+  const allTags = [...new Set(works.flatMap((work) => work.tags))];
+
   return (
     <Box>
       <Typography level="h1">My Work</Typography>
       <WorkForm onSubmit={handleAddWork} />
-      <WorkList works={works} />
+      <WorkControls
+        sortBy={sortBy}
+        onSortChange={handleSortChange}
+        tags={allTags}
+        selectedTag={selectedTag}
+        onTagChange={handleTagChange}
+      />
+      <WorkList works={sortedAndFilteredWorks} />
     </Box>
   );
 };

@@ -10,6 +10,8 @@ import { useLocation } from 'react-router-dom';
 
 import DarkModeRoundedIcon from '@mui/icons-material/DarkModeRounded';
 import LightModeRoundedIcon from '@mui/icons-material/LightModeRounded';
+import LinkedInIcon from '@mui/icons-material/LinkedIn';
+import GitHubIcon from '@mui/icons-material/GitHub';
 
 function ColorSchemeToggle() {
   const { mode, setMode } = useColorScheme();
@@ -121,8 +123,33 @@ export default function Header() {
             alignItems: 'center',
           }}
         >
-
-          <Box></Box><ColorSchemeToggle />
+          <Tooltip title="LinkedIn" variant="outlined">
+            <IconButton
+              size="sm"
+              variant="plain"
+              color="neutral"
+              component="a"
+              href="https://www.linkedin.com/in/willowfrazey"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <LinkedInIcon />
+            </IconButton>
+          </Tooltip>
+          <Tooltip title="GitHub" variant="outlined">
+            <IconButton
+              size="sm"
+              variant="plain"
+              color="neutral"
+              component="a"
+              href="https://github.com/willowsalicaceae"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <GitHubIcon />
+            </IconButton>
+          </Tooltip>
+          <ColorSchemeToggle />
         </Box>
       </Box>
     </Box>
