@@ -20,7 +20,7 @@ const WorkForm = ({ onSubmit }) => {
       const software = (softwareString.match(itemPattern) || []).map((sw) => sw.trim());
 
       const work = {
-        id,
+        id: id.trim(),
         subtitle: subtitle.trim(),
         title: title.trim(),
         date: date.trim(),

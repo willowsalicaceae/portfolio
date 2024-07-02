@@ -8,13 +8,12 @@ const portfolioData = [
     "description": "Created visualizer",
     "tags": [
       "Visualizer",
-      " Music"
+      "Music"
     ],
     "software": [
       "After Effects",
-      " Photoshop"
-    ],
-    "relevancy": 8
+      "Photoshop"
+    ]
   },
   {
     "id": "onenightout",
@@ -25,13 +24,12 @@ const portfolioData = [
     "description": "Created visualizer",
     "tags": [
       "Visualizer",
-      " Music"
+      "Music"
     ],
     "software": [
       "After Effects",
-      " Photoshop"
-    ],
-    "relevancy": 8
+      "Photoshop"
+    ]
   },
   {
     "id": "falsepermanence",
@@ -42,11 +40,11 @@ const portfolioData = [
     "description": "Created visualizer",
     "tags": [
       "Visualizer",
-      " Music"
+      "Music"
     ],
     "software": [
       "After Effects",
-      " Photoshop"
+      "Photoshop"
     ]
   },
   {
@@ -58,12 +56,11 @@ const portfolioData = [
     "description": "Created website",
     "tags": [
       "Web Development",
-      " School Project"
+      "School Project"
     ],
     "software": [
       "React"
-    ],
-    "relevancy": 5
+    ]
   },
   {
     "id": "weatherheatmap",
@@ -74,12 +71,11 @@ const portfolioData = [
     "description": "Created website",
     "tags": [
       "Web Development",
-      " School Project"
+      "School Project"
     ],
     "software": [
       "D3"
-    ],
-    "relevancy": 6
+    ]
   },
   {
     "id": "covid67",
@@ -90,13 +86,12 @@ const portfolioData = [
     "description": "Designed website, created demonstration video",
     "tags": [
       "Web Development",
-      " School Project"
+      "School Project"
     ],
     "software": [
       "React",
-      " Node"
-    ],
-    "relevancy": 6
+      "Node.js"
+    ]
   },
   {
     "id": "walkseattle",
@@ -107,13 +102,28 @@ const portfolioData = [
     "description": "Developed website",
     "tags": [
       "Web Development",
-      " School Project"
+      "School Project"
     ],
     "software": [
       "React",
-      " Node"
+      "Node.js"
+    ]
+  },
+  {
+    "id": "realtalkepisode",
+    "subtitle": "Real Talk. with John Rudnicki",
+    "title": "Dealing With Injury and UW Soccer with Levi Hawk",
+    "date": "Sep 15, 2023",
+    "url": "https://www.youtube.com/watch?v=gYZnqejfgwg",
+    "description": "Videography, audio post-production",
+    "tags": [
+      "Video",
+      "Audio"
     ],
-    "relevancy": 9
+    "software": [
+      "Premiere Pro",
+      "Ableton"
+    ]
   }
 ];
 

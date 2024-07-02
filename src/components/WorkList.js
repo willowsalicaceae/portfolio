@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Box, Grid, Card, CardCover, CardContent, Typography } from '@mui/joy';
+import { Box, Grid, Card, CardCover, CardContent, Typography, Stack } from '@mui/joy';
 
 const WorkList = ({ works }) => {
   return (
@@ -70,6 +70,16 @@ const WorkList = ({ works }) => {
                 >
                   <Typography level="h3">{work.title}</Typography>
                   <Typography level="body2">{work.subtitle}</Typography>
+                  <Stack direction="row" spacing={1} mt={1}>
+                    {work.software.map((sw) => (
+                      <img
+                        key={sw}
+                        src={`/icons/${sw}.svg`}
+                        alt={sw}
+                        style={{ width: '24px', height: '24px' }}
+                      />
+                    ))}
+                  </Stack>
                 </CardContent>
               </Card>
             </Link>
