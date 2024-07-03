@@ -7,13 +7,15 @@ const portfolioData = [
     "url": "https://www.youtube.com/watch?v=bWBdWwz6k2s",
     "description": "Created visualizer",
     "tags": [
+      "Video",
       "Visualizer",
       "Music"
     ],
     "software": [
       "After Effects",
       "Photoshop"
-    ]
+    ],
+    "relevancy": 6
   },
   {
     "id": "onenightout",
@@ -23,13 +25,15 @@ const portfolioData = [
     "url": "https://www.youtube.com/watch?v=OxVBComxisI",
     "description": "Created visualizer",
     "tags": [
+      "Video",
       "Visualizer",
       "Music"
     ],
     "software": [
       "After Effects",
       "Photoshop"
-    ]
+    ],
+    "relevancy": 8
   },
   {
     "id": "falsepermanence",
@@ -39,13 +43,15 @@ const portfolioData = [
     "url": "https://www.youtube.com/watch?v=-elwaC0Cciw",
     "description": "Created visualizer",
     "tags": [
+      "Video",
       "Visualizer",
       "Music"
     ],
     "software": [
       "After Effects",
       "Photoshop"
-    ]
+    ],
+    "relevancy": 5
   },
   {
     "id": "chatbotcemetery",
@@ -60,7 +66,8 @@ const portfolioData = [
     ],
     "software": [
       "React"
-    ]
+    ],
+    "relevancy": 5
   },
   {
     "id": "weatherheatmap",
@@ -75,7 +82,8 @@ const portfolioData = [
     ],
     "software": [
       "D3"
-    ]
+    ],
+    "relevancy": 6
   },
   {
     "id": "covid67",
@@ -91,7 +99,8 @@ const portfolioData = [
     "software": [
       "React",
       "Node.js"
-    ]
+    ],
+    "relevancy": 6
   },
   {
     "id": "walkseattle",
@@ -107,10 +116,11 @@ const portfolioData = [
     "software": [
       "React",
       "Node.js"
-    ]
+    ],
+    "relevancy": 9
   },
   {
-    "id": "realtalkepisode",
+    "id": "realtalkepisode32",
     "subtitle": "Real Talk. with John Rudnicki",
     "title": "Dealing With Injury and UW Soccer with Levi Hawk",
     "date": "Sep 15, 2023",
@@ -121,9 +131,27 @@ const portfolioData = [
       "Audio"
     ],
     "software": [
-      "Premiere Pro",
-      "Ableton"
-    ]
+      "Premiere Pro"
+    ],
+    "relevancy": 5
+  },
+  {
+    "id": "cornerofmyeye",
+    "subtitle": "Dizzy Spins & Landon Sears",
+    "title": "Corner of My Eye",
+    "date": "May 26, 2022",
+    "url": "https://www.youtube.com/watch?v=JvJnYMCz4-I",
+    "description": "Created visualizer",
+    "tags": [
+      "Video",
+      "Visualizer",
+      "Music"
+    ],
+    "software": [
+      "After Effects",
+      "Photoshop"
+    ],
+    "relevancy": 8
   }
 ];
 

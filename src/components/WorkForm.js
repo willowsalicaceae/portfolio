@@ -7,17 +7,19 @@ const WorkForm = ({ onSubmit }) => {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    const workPattern = /(.+)\n(.+) - (.+)\n(.+)\n(.+)\n(.+)\n(.+)?\n(.+)?/g;
+    // Updated regex pattern to include relevancy score
+    const workPattern = /(.+)\n(.+) - (.+)\n(.+)\n(.+)\n(.+)\n(.+)?\n(.+)?\n(.+)?/g;
     const itemPattern = /([^,]+)/g;
 
     const works = [];
 
     let match;
     while ((match = workPattern.exec(portfolioData)) !== null) {
-      const [, id, subtitle, title, date, url, description, tagsString = '', softwareString = ''] = match;
+      const [, id, subtitle, title, date, url, description, tagsString = '', softwareString = '', relevancyString = ''] = match;
 
       const tags = (tagsString.match(itemPattern) || []).map((tag) => tag.trim());
       const software = (softwareString.match(itemPattern) || []).map((sw) => sw.trim());
+      const relevancy = parseInt(relevancyString.trim()) || 0; // Convert to number, default to 0 if not provided
 
       const work = {
         id: id.trim(),
@@ -28,6 +30,7 @@ const WorkForm = ({ onSubmit }) => {
         description: description.trim(),
         tags,
         software,
+        relevancy, // Include the relevancy score
       };
 
       works.push(work);
