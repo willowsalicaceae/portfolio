@@ -219,6 +219,8 @@ import { useLocation } from 'react-router-dom';
 
 import DarkModeRoundedIcon from '@mui/icons-material/DarkModeRounded';
 import LightModeRoundedIcon from '@mui/icons-material/LightModeRounded';
+import LinkedInIcon from '@mui/icons-material/LinkedIn';
+import GitHubIcon from '@mui/icons-material/GitHub';
 
 function ColorSchemeToggle() {
   const { mode, setMode } = useColorScheme();
@@ -330,8 +332,33 @@ export default function Header() {
             alignItems: 'center',
           }}
         >
-
-          <Box></Box><ColorSchemeToggle />
+          <Tooltip title="LinkedIn" variant="outlined">
+            <IconButton
+              size="sm"
+              variant="plain"
+              color="neutral"
+              component="a"
+              href="https://www.linkedin.com/in/willowfrazey"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <LinkedInIcon />
+            </IconButton>
+          </Tooltip>
+          <Tooltip title="GitHub" variant="outlined">
+            <IconButton
+              size="sm"
+              variant="plain"
+              color="neutral"
+              component="a"
+              href="https://github.com/willowsalicaceae"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <GitHubIcon />
+            </IconButton>
+          </Tooltip>
+          <ColorSchemeToggle />
         </Box>
       </Box>
     </Box>
@@ -433,20 +460,22 @@ const WorkForm = ({ onSubmit }) => {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    const workPattern = /(.+)\n(.+) - (.+)\n(.+)\n(.+)\n(.+)\n(.+)?\n(.+)?/g;
+    // Updated regex pattern to include relevancy score
+    const workPattern = /(.+)\n(.+) - (.+)\n(.+)\n(.+)\n(.+)\n(.+)?\n(.+)?\n(.+)?/g;
     const itemPattern = /([^,]+)/g;
 
     const works = [];
 
     let match;
     while ((match = workPattern.exec(portfolioData)) !== null) {
-      const [, id, subtitle, title, date, url, description, tagsString = '', softwareString = ''] = match;
+      const [, id, subtitle, title, date, url, description, tagsString = '', softwareString = '', relevancyString = ''] = match;
 
       const tags = (tagsString.match(itemPattern) || []).map((tag) => tag.trim());
       const software = (softwareString.match(itemPattern) || []).map((sw) => sw.trim());
+      const relevancy = parseInt(relevancyString.trim()) || 0; // Convert to number, default to 0 if not provided
 
       const work = {
-        id,
+        id: id.trim(),
         subtitle: subtitle.trim(),
         title: title.trim(),
         date: date.trim(),
@@ -454,6 +483,7 @@ const WorkForm = ({ onSubmit }) => {
         description: description.trim(),
         tags,
         software,
+        relevancy, // Include the relevancy score
       };
 
       works.push(work);
@@ -494,7 +524,7 @@ export default WorkForm;
 <file path="src\components\WorkList.js">
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Box, Grid, Card, CardCover, CardContent, Typography } from '@mui/joy';
+import { Box, Grid, Card, CardCover, CardContent, Typography, Stack } from '@mui/joy';
 
 const WorkList = ({ works }) => {
   return (
@@ -564,6 +594,16 @@ const WorkList = ({ works }) => {
                 >
                   <Typography level="h3">{work.title}</Typography>
                   <Typography level="body2">{work.subtitle}</Typography>
+                  <Stack direction="row" spacing={1} mt={1}>
+                    {work.software.map((sw) => (
+                      <img
+                        key={sw}
+                        src={`/icons/${sw}.svg`}
+                        alt={sw}
+                        style={{ width: '24px', height: '24px' }}
+                      />
+                    ))}
+                  </Stack>
                 </CardContent>
               </Card>
             </Link>
@@ -587,14 +627,15 @@ const portfolioData = [
     "url": "https://www.youtube.com/watch?v=bWBdWwz6k2s",
     "description": "Created visualizer",
     "tags": [
+      "Video",
       "Visualizer",
-      " Music"
+      "Music"
     ],
     "software": [
       "After Effects",
-      " Photoshop"
+      "Photoshop"
     ],
-    "relevancy": 8
+    "relevancy": 6
   },
   {
     "id": "onenightout",
@@ -604,12 +645,13 @@ const portfolioData = [
     "url": "https://www.youtube.com/watch?v=OxVBComxisI",
     "description": "Created visualizer",
     "tags": [
+      "Video",
       "Visualizer",
-      " Music"
+      "Music"
     ],
     "software": [
       "After Effects",
-      " Photoshop"
+      "Photoshop"
     ],
     "relevancy": 8
   },
@@ -621,13 +663,15 @@ const portfolioData = [
     "url": "https://www.youtube.com/watch?v=-elwaC0Cciw",
     "description": "Created visualizer",
     "tags": [
+      "Video",
       "Visualizer",
-      " Music"
+      "Music"
     ],
     "software": [
       "After Effects",
-      " Photoshop"
-    ]
+      "Photoshop"
+    ],
+    "relevancy": 5
   },
   {
     "id": "chatbotcemetery",
@@ -638,7 +682,7 @@ const portfolioData = [
     "description": "Created website",
     "tags": [
       "Web Development",
-      " School Project"
+      "School Project"
     ],
     "software": [
       "React"
@@ -654,7 +698,7 @@ const portfolioData = [
     "description": "Created website",
     "tags": [
       "Web Development",
-      " School Project"
+      "School Project"
     ],
     "software": [
       "D3"
@@ -670,11 +714,11 @@ const portfolioData = [
     "description": "Designed website, created demonstration video",
     "tags": [
       "Web Development",
-      " School Project"
+      "School Project"
     ],
     "software": [
       "React",
-      " Node"
+      "Node.js"
     ],
     "relevancy": 6
   },
@@ -687,13 +731,47 @@ const portfolioData = [
     "description": "Developed website",
     "tags": [
       "Web Development",
-      " School Project"
+      "School Project"
     ],
     "software": [
       "React",
-      " Node"
+      "Node.js"
     ],
     "relevancy": 9
+  },
+  {
+    "id": "realtalkepisode32",
+    "subtitle": "Real Talk. with John Rudnicki",
+    "title": "Dealing With Injury and UW Soccer with Levi Hawk",
+    "date": "Sep 15, 2023",
+    "url": "https://www.youtube.com/watch?v=gYZnqejfgwg",
+    "description": "Videography, audio post-production",
+    "tags": [
+      "Video",
+      "Audio"
+    ],
+    "software": [
+      "Premiere Pro"
+    ],
+    "relevancy": 5
+  },
+  {
+    "id": "cornerofmyeye",
+    "subtitle": "Dizzy Spins & Landon Sears",
+    "title": "Corner of My Eye",
+    "date": "May 26, 2022",
+    "url": "https://www.youtube.com/watch?v=JvJnYMCz4-I",
+    "description": "Created visualizer",
+    "tags": [
+      "Video",
+      "Visualizer",
+      "Music"
+    ],
+    "software": [
+      "After Effects",
+      "Photoshop"
+    ],
+    "relevancy": 8
   }
 ];
 
