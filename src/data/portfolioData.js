@@ -7,7 +7,7 @@ const portfolioData = [
     "url": "https://www.youtube.com/watch?v=bWBdWwz6k2s",
     "description": "Created visualizer",
     "tags": [
-      "Video",
+      "Video Editing",
       "Visualizer",
       "Music"
     ],
@@ -25,7 +25,7 @@ const portfolioData = [
     "url": "https://www.youtube.com/watch?v=OxVBComxisI",
     "description": "Created visualizer",
     "tags": [
-      "Video",
+      "Video Editing",
       "Visualizer",
       "Music"
     ],
@@ -43,7 +43,7 @@ const portfolioData = [
     "url": "https://www.youtube.com/watch?v=-elwaC0Cciw",
     "description": "Created visualizer",
     "tags": [
-      "Video",
+      "Video Editing",
       "Visualizer",
       "Music"
     ],
@@ -127,7 +127,7 @@ const portfolioData = [
     "url": "https://www.youtube.com/watch?v=gYZnqejfgwg",
     "description": "Videography, audio post-production",
     "tags": [
-      "Video",
+      "Video Editing",
       "Audio"
     ],
     "software": [
@@ -143,7 +143,7 @@ const portfolioData = [
     "url": "https://www.youtube.com/watch?v=JvJnYMCz4-I",
     "description": "Created visualizer",
     "tags": [
-      "Video",
+      "Video Editing",
       "Visualizer",
       "Music"
     ],

@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Box, Typography } from '@mui/joy';
+import { useLocation } from 'react-router-dom';
 import WorkForm from '../components/WorkForm';
 import WorkList from '../components/WorkList';
 import WorkControls from '../components/WorkControls';
@@ -9,10 +10,16 @@ const Work = () => {
   const [works, setWorks] = useState([]);
   const [sortBy, setSortBy] = useState('relevancy');
   const [selectedTag, setSelectedTag] = useState('');
+  const location = useLocation();
 
   useEffect(() => {
     setWorks(portfolioData);
-  }, []);
+    const params = new URLSearchParams(location.search);
+    const tagFromUrl = params.get('tag');
+    if (tagFromUrl) {
+      setSelectedTag(tagFromUrl);
+    }
+  }, [location]);
 
   const handleAddWork = (newWorks) => {
     setWorks(newWorks);
