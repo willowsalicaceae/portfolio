@@ -10,6 +10,7 @@ const Work = () => {
   const [works, setWorks] = useState([]);
   const [sortBy, setSortBy] = useState('relevancy');
   const [selectedTag, setSelectedTag] = useState('');
+  const [animatedThumbnails, setAnimatedThumbnails] = useState(true);
   const location = useLocation();
 
   useEffect(() => {
@@ -18,6 +19,11 @@ const Work = () => {
     const tagFromUrl = params.get('tag');
     if (tagFromUrl) {
       setSelectedTag(tagFromUrl);
+    }
+
+    const savedAnimatedThumbnails = localStorage.getItem('animatedThumbnails');
+    if (savedAnimatedThumbnails !== null) {
+      setAnimatedThumbnails(JSON.parse(savedAnimatedThumbnails));
     }
   }, [location]);
 
@@ -31,6 +37,12 @@ const Work = () => {
 
   const handleTagChange = (tag) => {
     setSelectedTag(tag);
+  };
+
+  const handleAnimatedThumbnailsChange = (event) => {
+    const newValue = event.target.checked;
+    setAnimatedThumbnails(newValue);
+    localStorage.setItem('animatedThumbnails', JSON.stringify(newValue));
   };
 
   const sortedAndFilteredWorks = works
@@ -56,8 +68,10 @@ const Work = () => {
         tags={allTags}
         selectedTag={selectedTag}
         onTagChange={handleTagChange}
+        animatedThumbnails={animatedThumbnails}
+        onAnimatedThumbnailsChange={handleAnimatedThumbnailsChange}
       />
-      <WorkList works={sortedAndFilteredWorks} />
+      <WorkList works={sortedAndFilteredWorks} animatedThumbnails={animatedThumbnails} />
     </Box>
   );
 };

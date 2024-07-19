@@ -7,6 +7,7 @@ import WorkPreview from '../components/WorkPreview';
 const About = () => {
   const [selectedCategory, setSelectedCategory] = useState('Video Editing');
   const [typingComplete, setTypingComplete] = useState(false);
+  const [showCategories, setShowCategories] = useState(false);
   const [showWorks, setShowWorks] = useState(false);
   const categories = ['Video Editing', 'Web Development'];
 
@@ -34,7 +35,8 @@ const About = () => {
 
   useEffect(() => {
     if (typingComplete) {
-      setShowWorks(true);
+      setShowCategories(true);
+      setTimeout(() => setShowWorks(true), 1000); // Delay showing works
     }
   }, [typingComplete]);
 
@@ -58,23 +60,28 @@ const About = () => {
             {categories.map((category, index) => (
               <Typography
                 key={category}
-                level="h3"
+                level="h1"
                 component={Link}
                 to={`/work?tag=${encodeURIComponent(category)}`}
                 sx={{
                   display: 'block',
-                  color: selectedCategory === category ? 'primary.main' : 'text.primary',
+                  color: 'text.primary',
                   textDecoration: 'none',
                   mt: 2,
-                  fontSize: '2rem',
+                  fontSize: '4rem',
                   fontWeight: 'bold',
-                  opacity: typingComplete ? 1 : 0,
-                  transition: 'opacity 0.5s, color 0.3s, text-decoration 0.3s',
-                  transitionDelay: `${index * 0.2 + 0.5}s`,
+                  opacity: showCategories ? 1 : 0,
+                  transition: 'opacity 0.5s, color 0.3s, text-decoration-color 0.3s',
+                  transitionDelay: `${index * 0.2}s`,
                   '&:hover': { 
                     color: 'primary.main',
-                    textDecoration: 'underline',
+                    textDecorationColor: 'rgba(var(--joy-palette-primary-mainChannel) / 1)',
                   },
+                  textDecorationLine: 'underline',
+                  textDecorationColor: selectedCategory === category 
+                    ? 'rgba(var(--joy-palette-primary-mainChannel) / 0.5)'
+                    : 'transparent',
+                  textUnderlineOffset: '0.1em',
                 }}
                 onMouseEnter={() => handleCategoryChange(category)}
               >

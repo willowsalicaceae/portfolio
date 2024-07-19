@@ -366,6 +366,65 @@ export default function Header() {
 }
 </file>
 
+<file path="src\components\TypewriterEffect.js">
+import React, { useState, useEffect } from 'react';
+import { Typography, Stack } from '@mui/joy';
+
+const TypewriterEffect = ({ lines, onComplete }) => {
+  const [displayedLines, setDisplayedLines] = useState(lines.map(() => ''));
+  const [currentLineIndex, setCurrentLineIndex] = useState(0);
+  const [currentCharIndex, setCurrentCharIndex] = useState(0);
+  const [isPaused, setIsPaused] = useState(false);
+
+  useEffect(() => {
+    if (currentLineIndex >= lines.length) {
+      onComplete && onComplete();
+      return;
+    }
+
+    const timer = setTimeout(() => {
+      if (isPaused) {
+        setIsPaused(false);
+        setCurrentLineIndex(prev => prev + 1);
+        setCurrentCharIndex(0);
+      } else if (currentCharIndex < lines[currentLineIndex].length) {
+        setDisplayedLines(prev => 
+          prev.map((line, index) => 
+            index === currentLineIndex 
+              ? lines[currentLineIndex].slice(0, currentCharIndex + 1) 
+              : line
+          )
+        );
+        setCurrentCharIndex(prev => prev + 1);
+      } else {
+        setIsPaused(true);
+      }
+    }, isPaused ? 250 : 50);
+
+    return () => clearTimeout(timer);
+  }, [currentLineIndex, currentCharIndex, isPaused, lines, onComplete]);
+
+  return (
+    <Stack spacing={2}>
+      {displayedLines.map((line, index) => (
+        <Typography 
+          key={index}
+          level={index === 0 ? "h1" : index === 1 ? "h2" : "h3"}
+          sx={{
+            fontSize: '4rem',
+            fontWeight: 'bold',
+          }}
+        >
+          {line}
+        </Typography>
+      ))}
+    </Stack>
+  );
+};
+
+export default TypewriterEffect;
+</file>
+
 <file path="src\components\WorkControls.js">
 import React from 'react';
 import { Box, Select, Option, Chip, Radio, RadioGroup, FormControl, FormLabel } from '@mui/joy';
@@ -617,6 +676,99 @@ const WorkList = ({ works }) => {
 export default WorkList;
 </file>
 
+<file path="src\components\WorkPreview.js">
+import React from 'react';
+import { Box, Card, CardCover, Typography } from '@mui/joy';
+import { Link } from 'react-router-dom';
+import portfolioData from '../data/portfolioData';
+
+const WorkPreview = ({ workIds }) => {
+  const gap = 16; // 2 * 8px (theme's default spacing unit)
+
+  return (
+    <Box
+      sx={{
+        display: 'grid',
+        gridTemplateColumns: `repeat(6, 1fr)`,
+        gap: `${gap}px`,
+        p: 2
+      }}
+    >
+      {workIds.map((workId, index) => {
+        const work = portfolioData.find(w => w.id === workId.id);
+        if (!work) return null;
+       
+        return (
+          <Box
+            key={work.id}
+            sx={{
+              gridColumn: workId.size === 2 ? 'span 4' : 'span 2',
+              position: 'relative',
+              '&::before': {
+                content: '""',
+                display: 'block',
+                paddingTop: workId.size === 2 ? '50%' : '100%',
+              },
+              opacity: 0,
+              animation: 'fadeIn 0.5s forwards',
+              animationDelay: `${index * 0.1}s`,
+              '@keyframes fadeIn': {
+                '0%': { opacity: 0 },
+                '100%': { opacity: 1 },
+              },
+            }}
+          >
+            <Card
+              component={Link}
+              to={`/work/${work.id}`}
+              sx={{
+                position: 'absolute',
+                top: 0,
+                left: 0,
+                right: 0,
+                bottom: 0,
+                textDecoration: 'none',
+              }}
+            >
+              <CardCover>
+                <img
+                  src={`/images/thumbnails/${work.id}.jpg`}
+                  alt={work.title}
+                  style={{ objectFit: 'cover', width: '100%', height: '100%' }}
+                />
+              </CardCover>
+              <CardCover
+                sx={{
+                  background:
+                    'linear-gradient(to top, rgba(0,0,0,0.4), rgba(0,0,0,0) 200px), linear-gradient(to top, rgba(0,0,0,0.8), rgba(0,0,0,0) 300px)',
+                  opacity: 0,
+                  transition: 'opacity 0.3s',
+                  '&:hover': {
+                    opacity: 1,
+                  },
+                }}
+              >
+                <Typography
+                  level="title-lg"
+                  sx={{
+                    color: 'white',
+                    position: 'absolute',
+                  }}
+                >
+                  {work.title}
+                </Typography>
+              </CardCover>
+            </Card>
+          </Box>
+        );
+      })}
+    </Box>
+  );
+};
+
+export default WorkPreview;
+</file>
+
 <file path="src\data\portfolioData.js">
 const portfolioData = [
   {
@@ -627,7 +779,7 @@ const portfolioData = [
     "url": "https://www.youtube.com/watch?v=bWBdWwz6k2s",
     "description": "Created visualizer",
     "tags": [
-      "Video",
+      "Video Editing",
       "Visualizer",
       "Music"
     ],
@@ -645,7 +797,7 @@ const portfolioData = [
     "url": "https://www.youtube.com/watch?v=OxVBComxisI",
     "description": "Created visualizer",
     "tags": [
-      "Video",
+      "Video Editing",
       "Visualizer",
       "Music"
     ],
@@ -663,7 +815,7 @@ const portfolioData = [
     "url": "https://www.youtube.com/watch?v=-elwaC0Cciw",
     "description": "Created visualizer",
     "tags": [
-      "Video",
+      "Video Editing",
       "Visualizer",
       "Music"
     ],
@@ -747,7 +899,7 @@ const portfolioData = [
     "url": "https://www.youtube.com/watch?v=gYZnqejfgwg",
     "description": "Videography, audio post-production",
     "tags": [
-      "Video",
+      "Video Editing",
       "Audio"
     ],
     "software": [
@@ -763,7 +915,7 @@ const portfolioData = [
     "url": "https://www.youtube.com/watch?v=JvJnYMCz4-I",
     "description": "Created visualizer",
     "tags": [
-      "Video",
+      "Video Editing",
       "Visualizer",
       "Music"
     ],
@@ -779,17 +931,103 @@ export default portfolioData;
 </file>
 
 <file path="src\pages\About.js">
-import React from 'react';
-import { Box, Typography } from '@mui/joy';
+import React, { useState, useEffect } from 'react';
+import { Box, Typography, Grid } from '@mui/joy';
+import { Link } from 'react-router-dom';
+import TypewriterEffect from '../components/TypewriterEffect';
+import WorkPreview from '../components/WorkPreview';
 
 const About = () => {
+  const [selectedCategory, setSelectedCategory] = useState('Video Editing');
+  const [typingComplete, setTypingComplete] = useState(false);
+  const [showCategories, setShowCategories] = useState(false);
+  const [showWorks, setShowWorks] = useState(false);
+  const categories = ['Video Editing', 'Web Development'];
+
+  const lines = [
+    "Hi!",
+    "I'm Willow Frazey.",
+    "I do..."
+  ];
+
+  const workPreviews = {
+    'Video Editing': [
+      { id: 'cornerofmyeyeradioedit', size: 2 },
+      { id: 'onenightout', size: 1 },
+      { id: 'falsepermanence', size: 1 },
+      { id: 'realtalkepisode32', size: 2 },
+      { id: 'cornerofmyeye', size: 2 },
+    ],
+    'Web Development': [
+      { id: 'chatbotcemetery', size: 2 },
+      { id: 'weatherheatmap', size: 1 },
+      { id: 'covid67', size: 1 },
+      { id: 'walkseattle', size: 2 },
+    ],
+  };
+
+  useEffect(() => {
+    if (typingComplete) {
+      setShowCategories(true);
+      setTimeout(() => setShowWorks(true), 1000); // Delay showing works
+    }
+  }, [typingComplete]);
+
+  const handleCategoryChange = (category) => {
+    setShowWorks(false);
+    setTimeout(() => {
+      setSelectedCategory(category);
+      setShowWorks(true);
+    }, 300);
+  };
+
   return (
-    <Box>
-      <Typography level="h1">About Me</Typography>
-      <Typography>
-        Coming soon!
-      </Typography>
-    </Box>
+    <Grid container spacing={4}>
+      <Grid xs={12} md={6}>
+        <Box sx={{ p: 4 }}>
+          <TypewriterEffect 
+            lines={lines} 
+            onComplete={() => setTypingComplete(true)} 
+          />
+          <Box sx={{ mt: 4 }}>
+            {categories.map((category, index) => (
+              <Typography
+                key={category}
+                level="h1"
+                component={Link}
+                to={`/work?tag=${encodeURIComponent(category)}`}
+                sx={{
+                  display: 'block',
+                  color: 'text.primary',
+                  textDecoration: 'none',
+                  mt: 2,
+                  fontSize: '4rem',
+                  fontWeight: 'bold',
+                  opacity: showCategories ? 1 : 0,
+                  transition: 'opacity 0.5s, color 0.3s, text-decoration-color 0.3s',
+                  transitionDelay: `${index * 0.2}s`,
+                  '&:hover': { 
+                    color: 'primary.main',
+                    textDecorationColor: 'rgba(var(--joy-palette-primary-mainChannel) / 1)',
+                  },
+                  textDecorationLine: 'underline',
+                  textDecorationColor: selectedCategory === category 
+                    ? 'rgba(var(--joy-palette-primary-mainChannel) / 0.5)'
+                    : 'transparent',
+                  textUnderlineOffset: '0.1em',
+                }}
+                onMouseEnter={() => handleCategoryChange(category)}
+              >
+                {category}
+              </Typography>
+            ))}
+          </Box>
+        </Box>
+      </Grid>
+      <Grid xs={12} md={6}>
+        {showWorks && <WorkPreview workIds={workPreviews[selectedCategory]} />}
+      </Grid>
+    </Grid>
   );
 };
 
@@ -817,6 +1055,7 @@ export default Contact;
 <file path="src\pages\Work.js">
 import { useState, useEffect } from 'react';
 import { Box, Typography } from '@mui/joy';
+import { useLocation } from 'react-router-dom';
 import WorkForm from '../components/WorkForm';
 import WorkList from '../components/WorkList';
 import WorkControls from '../components/WorkControls';
@@ -826,10 +1065,16 @@ const Work = () => {
   const [works, setWorks] = useState([]);
   const [sortBy, setSortBy] = useState('relevancy');
   const [selectedTag, setSelectedTag] = useState('');
+  const location = useLocation();
 
   useEffect(() => {
     setWorks(portfolioData);
-  }, []);
+    const params = new URLSearchParams(location.search);
+    const tagFromUrl = params.get('tag');
+    if (tagFromUrl) {
+      setSelectedTag(tagFromUrl);
+    }
+  }, [location]);
 
   const handleAddWork = (newWorks) => {
     setWorks(newWorks);

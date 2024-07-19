@@ -36,7 +36,7 @@ const TypewriterEffect = ({ lines, onComplete }) => {
   }, [currentLineIndex, currentCharIndex, isPaused, lines, onComplete]);
 
   return (
-    <Stack spacing={0}>
+    <Stack spacing={2}>
       {displayedLines.map((line, index) => (
         <Typography 
           key={index}

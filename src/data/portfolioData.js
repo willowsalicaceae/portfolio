@@ -15,7 +15,8 @@ const portfolioData = [
       "After Effects",
       "Photoshop"
     ],
-    "relevancy": 6
+    "relevancy": 6,
+    "hasVideo": true
   },
   {
     "id": "onenightout",
@@ -33,7 +34,8 @@ const portfolioData = [
       "After Effects",
       "Photoshop"
     ],
-    "relevancy": 8
+    "relevancy": 8,
+    "hasVideo": true
   },
   {
     "id": "falsepermanence",
@@ -151,7 +153,8 @@ const portfolioData = [
       "After Effects",
       "Photoshop"
     ],
-    "relevancy": 8
+    "relevancy": 8,
+    "hasVideo": true
   }
 ];
 

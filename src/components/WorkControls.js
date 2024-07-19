@@ -1,8 +1,8 @@
 import React from 'react';
-import { Box, Select, Option, Chip, Radio, RadioGroup, FormControl, FormLabel } from '@mui/joy';
+import { Box, Select, Option, Chip, Radio, RadioGroup, FormControl, FormLabel, Checkbox } from '@mui/joy';
 import CheckIcon from '@mui/icons-material/Check';
 
-const WorkControls = ({ sortBy, onSortChange, tags, selectedTag, onTagChange }) => {
+const WorkControls = ({ sortBy, onSortChange, tags, selectedTag, onTagChange, animatedThumbnails, onAnimatedThumbnailsChange }) => {
   return (
     <Box sx={{ display: 'flex', gap: 4, alignItems: 'flex-end', mb: 2 }}>
       <FormControl>
@@ -35,7 +35,6 @@ const WorkControls = ({ sortBy, onSortChange, tags, selectedTag, onTagChange }) 
             }
             sx={{
               "--Chip-minHeight": "34px",
-
             }}
           >
             <Radio
@@ -73,6 +72,13 @@ const WorkControls = ({ sortBy, onSortChange, tags, selectedTag, onTagChange }) 
             );
           })}
         </RadioGroup>
+      </FormControl>
+      <FormControl>
+        <Checkbox
+          checked={animatedThumbnails}
+          onChange={onAnimatedThumbnailsChange}
+          label="Animated Thumbnails"
+        />
       </FormControl>
     </Box>
   );
