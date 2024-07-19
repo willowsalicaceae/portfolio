@@ -427,10 +427,10 @@ export default TypewriterEffect;
 
 <file path="src\components\WorkControls.js">
 import React from 'react';
-import { Box, Select, Option, Chip, Radio, RadioGroup, FormControl, FormLabel } from '@mui/joy';
+import { Box, Select, Option, Chip, Radio, RadioGroup, FormControl, FormLabel, Checkbox } from '@mui/joy';
 import CheckIcon from '@mui/icons-material/Check';
 
-const WorkControls = ({ sortBy, onSortChange, tags, selectedTag, onTagChange }) => {
+const WorkControls = ({ sortBy, onSortChange, tags, selectedTag, onTagChange, animatedThumbnails, onAnimatedThumbnailsChange }) => {
   return (
     <Box sx={{ display: 'flex', gap: 4, alignItems: 'flex-end', mb: 2 }}>
       <FormControl>
@@ -463,7 +463,6 @@ const WorkControls = ({ sortBy, onSortChange, tags, selectedTag, onTagChange }) 
             }
             sx={{
               "--Chip-minHeight": "34px",
-
             }}
           >
             <Radio
@@ -502,6 +501,13 @@ const WorkControls = ({ sortBy, onSortChange, tags, selectedTag, onTagChange }) 
           })}
         </RadioGroup>
       </FormControl>
+      <FormControl>
+        <Checkbox
+          checked={animatedThumbnails}
+          onChange={onAnimatedThumbnailsChange}
+          label="Animated Thumbnails"
+        />
+      </FormControl>
     </Box>
   );
 };
@@ -519,19 +525,20 @@ const WorkForm = ({ onSubmit }) => {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    // Updated regex pattern to include relevancy score
-    const workPattern = /(.+)\n(.+) - (.+)\n(.+)\n(.+)\n(.+)\n(.+)?\n(.+)?\n(.+)?/g;
+    // Updated regex pattern to include hasVideo
+    const workPattern = /(.+)\n(.+) - (.+)\n(.+)\n(.+)\n(.+)\n(.+)?\n(.+)?\n(.+)?\n(.+)?/g;
     const itemPattern = /([^,]+)/g;
 
     const works = [];
 
     let match;
     while ((match = workPattern.exec(portfolioData)) !== null) {
-      const [, id, subtitle, title, date, url, description, tagsString = '', softwareString = '', relevancyString = ''] = match;
+      const [, id, subtitle, title, date, url, description, tagsString = '', softwareString = '', relevancyString = '', hasVideoString = ''] = match;
 
       const tags = (tagsString.match(itemPattern) || []).map((tag) => tag.trim());
       const software = (softwareString.match(itemPattern) || []).map((sw) => sw.trim());
-      const relevancy = parseInt(relevancyString.trim()) || 0; // Convert to number, default to 0 if not provided
+      const relevancy = parseInt(relevancyString.trim()) || 0;
+      const hasVideo = hasVideoString.trim().toLowerCase() === 'true';
 
       const work = {
         id: id.trim(),
@@ -542,7 +549,8 @@ const WorkForm = ({ onSubmit }) => {
         description: description.trim(),
         tags,
         software,
-        relevancy, // Include the relevancy score
+        relevancy,
+        hasVideo,
       };
 
       works.push(work);
@@ -581,91 +589,134 @@ export default WorkForm;
 </file>
 
 <file path="src\components\WorkList.js">
-import React from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Box, Grid, Card, CardCover, CardContent, Typography, Stack } from '@mui/joy';
+import { Box, Grid, Card, CardCover, CardContent, Typography, Stack, Skeleton } from '@mui/joy';
 
-const WorkList = ({ works }) => {
+const WorkCard = ({ work, animatedThumbnails }) => {
+  const [isLoading, setIsLoading] = useState(true);
+
+  const handleMediaLoaded = () => {
+    setIsLoading(false);
+  };
+
+  return (
+    <Link to={`/work/${work.id}`}>
+      <Card
+        sx={{
+          position: 'relative',
+          overflow: 'hidden',
+          paddingTop: '50%',
+          '&:hover .overlay': {
+            opacity: 1,
+          },
+          '&:hover .card-content': {
+            opacity: 1,
+          },
+        }}
+      >
+        <CardCover
+          sx={{
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            width: '100%',
+            height: '100%',
+          }}
+        >
+          {isLoading && (
+            <Skeleton
+              animation="wave"
+              variant="rectangular"
+              width="100%"
+              height="100%"
+            />
+          )}
+          {animatedThumbnails && work.hasVideo ? (
+            <video
+              src={`/videos/${work.id}.mp4`}
+              loop
+              muted
+              autoPlay
+              playsInline
+              style={{
+                objectFit: 'cover',
+                width: '100%',
+                height: '100%',
+                display: isLoading ? 'none' : 'block',
+              }}
+              onLoadedData={handleMediaLoaded}
+            />
+          ) : (
+            <img
+              src={`/images/thumbnails/${work.id}.jpg`}
+              srcSet={`/images/thumbnails/${work.id}.jpg 2x`}
+              loading="lazy"
+              alt={work.title}
+              style={{
+                objectFit: 'cover',
+                width: '100%',
+                height: '100%',
+                display: isLoading ? 'none' : 'block',
+              }}
+              onLoad={handleMediaLoaded}
+            />
+          )}
+          <Box
+            className="overlay"
+            sx={{
+              position: 'absolute',
+              top: 0,
+              left: 0,
+              width: '100%',
+              height: '100%',
+              background: 'linear-gradient(to bottom, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.8))',
+              opacity: 0,
+              transition: 'opacity 0.3s',
+            }}
+          />
+        </CardCover>
+        <CardContent
+          className="card-content"
+          sx={{
+            position: 'absolute',
+            bottom: 0,
+            left: 0,
+            width: '100%',
+            opacity: 0,
+            transition: 'opacity 0.3s',
+            color: '#fff',
+            padding: 2,
+            '& .MuiTypography-root': {
+              color: '#fff',
+            },
+          }}
+        >
+          <Typography level="h3">{work.title}</Typography>
+          <Typography level="body2">{work.subtitle}</Typography>
+          <Stack direction="row" spacing={1} mt={1}>
+            {work.software.map((sw) => (
+              <img
+                key={sw}
+                src={`/icons/${sw}.svg`}
+                alt={sw}
+                style={{ width: '24px', height: '24px' }}
+              />
+            ))}
+          </Stack>
+        </CardContent>
+      </Card>
+    </Link>
+  );
+};
+
+const WorkList = ({ works, animatedThumbnails }) => {
   return (
     <Box>
       <Grid container spacing={2}>
         {works.map((work) => (
           <Grid key={work.id} xs={12} sm={6} md={4}>
-            <Link to={`/work/${work.id}`}>
-              <Card
-                sx={{
-                  position: 'relative',
-                  overflow: 'hidden',
-                  paddingTop: '50%',
-                  '&:hover .overlay': {
-                    opacity: 1,
-                  },
-                  '&:hover .card-content': {
-                    opacity: 1,
-                  },
-                }}
-              >
-                <CardCover
-                  sx={{
-                    position: 'absolute',
-                    top: 0,
-                    left: 0,
-                    width: '100%',
-                    height: '100%',
-                  }}
-                >
-                  <img
-                    src={`/images/thumbnails/${work.id}.jpg`}
-                    srcSet={`/images/thumbnails/${work.id}.jpg 2x`}
-                    loading="lazy"
-                    alt={work.title}
-                    style={{ objectFit: 'cover', width: '100%', height: '100%' }}
-                  />
-                  <Box
-                    className="overlay"
-                    sx={{
-                      position: 'absolute',
-                      top: 0,
-                      left: 0,
-                      width: '100%',
-                      height: '100%',
-                      background: 'linear-gradient(to bottom, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.8))',
-                      opacity: 0,
-                      transition: 'opacity 0.3s',
-                    }}
-                  />
-                </CardCover>
-                <CardContent
-                  className="card-content"
-                  sx={{
-                    position: 'absolute',
-                    bottom: 0,
-                    left: 0,
-                    width: '100%',
-                    opacity: 0,
-                    transition: 'opacity 0.3s',
-                    color: '#fff',
-                    padding: 2,
-                    '& .MuiTypography-root': {
-                      color: '#fff',
-                    },
-                  }}
-                >
-                  <Typography level="h3">{work.title}</Typography>
-                  <Typography level="body2">{work.subtitle}</Typography>
-                  <Stack direction="row" spacing={1} mt={1}>
-                    {work.software.map((sw) => (
-                      <img
-                        key={sw}
-                        src={`/icons/${sw}.svg`}
-                        alt={sw}
-                        style={{ width: '24px', height: '24px' }}
-                      />
-                    ))}
-                  </Stack>
-                </CardContent>
-              </Card>
-            </Link>
+            <WorkCard work={work} animatedThumbnails={animatedThumbnails} />
           </Grid>
         ))}
       </Grid>
@@ -787,7 +838,8 @@ const portfolioData = [
       "After Effects",
       "Photoshop"
     ],
-    "relevancy": 6
+    "relevancy": 6,
+    "hasVideo": true
   },
   {
     "id": "onenightout",
@@ -805,7 +857,8 @@ const portfolioData = [
       "After Effects",
       "Photoshop"
     ],
-    "relevancy": 8
+    "relevancy": 8,
+    "hasVideo": true
   },
   {
     "id": "falsepermanence",
@@ -923,7 +976,8 @@ const portfolioData = [
       "After Effects",
       "Photoshop"
     ],
-    "relevancy": 8
+    "relevancy": 8,
+    "hasVideo": true
   }
 ];
 
@@ -1065,6 +1119,7 @@ const Work = () => {
   const [works, setWorks] = useState([]);
   const [sortBy, setSortBy] = useState('relevancy');
   const [selectedTag, setSelectedTag] = useState('');
+  const [animatedThumbnails, setAnimatedThumbnails] = useState(true);
   const location = useLocation();
 
   useEffect(() => {
@@ -1073,6 +1128,11 @@ const Work = () => {
     const tagFromUrl = params.get('tag');
     if (tagFromUrl) {
       setSelectedTag(tagFromUrl);
+    }
+
+    const savedAnimatedThumbnails = localStorage.getItem('animatedThumbnails');
+    if (savedAnimatedThumbnails !== null) {
+      setAnimatedThumbnails(JSON.parse(savedAnimatedThumbnails));
     }
   }, [location]);
 
@@ -1086,6 +1146,12 @@ const Work = () => {
 
   const handleTagChange = (tag) => {
     setSelectedTag(tag);
+  };
+
+  const handleAnimatedThumbnailsChange = (event) => {
+    const newValue = event.target.checked;
+    setAnimatedThumbnails(newValue);
+    localStorage.setItem('animatedThumbnails', JSON.stringify(newValue));
   };
 
   const sortedAndFilteredWorks = works
@@ -1111,8 +1177,10 @@ const Work = () => {
         tags={allTags}
         selectedTag={selectedTag}
         onTagChange={handleTagChange}
+        animatedThumbnails={animatedThumbnails}
+        onAnimatedThumbnailsChange={handleAnimatedThumbnailsChange}
       />
-      <WorkList works={sortedAndFilteredWorks} />
+      <WorkList works={sortedAndFilteredWorks} animatedThumbnails={animatedThumbnails} />
     </Box>
   );
 };

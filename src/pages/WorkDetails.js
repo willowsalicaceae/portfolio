@@ -1,6 +1,7 @@
 import React from 'react';
 import { useParams } from 'react-router-dom';
-import { Box, Typography, Card, CardContent, CardCover, Chip, Link, Stack, Grid, AspectRatio } from '@mui/joy';
+import { Box, Typography, Card, CardContent, CardActions, Chip, Link, Stack, Grid, AspectRatio, Button } from '@mui/joy';
+import OpenInNew from '@mui/icons-material/OpenInNew';
 import portfolioData from '../data/portfolioData';
 
 const WorkDetails = () => {
@@ -11,12 +12,13 @@ const WorkDetails = () => {
     return <Typography>Work not found</Typography>;
   }
 
-  const isYouTubeVideo = work.url.includes('youtube.com') || work.url.includes('youtu.be');
-  const videoId = isYouTubeVideo ? work.url.split(/v\/|v=|youtu\.be\//)[1].split(/[?&]/)[0] : null;
+  const mainLink = work.links[0];
+  const isYouTubeVideo = mainLink.url.includes('youtube.com') || mainLink.url.includes('youtu.be');
+  const videoId = isYouTubeVideo ? mainLink.url.split(/v\/|v=|youtu\.be\//)[1].split(/[?&]/)[0] : null;
 
   return (
     <Box sx={{ maxWidth: '800px', margin: '0 auto' }}>
-      <Card variant="plain" size="lg">
+      <Card variant="outlined">
         <AspectRatio ratio="16/9" sx={{
           borderRadius: 'sm',
           overflow: 'hidden',
@@ -33,7 +35,7 @@ const WorkDetails = () => {
             />
           ) : (
             <Link
-              href={work.url}
+              href={mainLink.url}
               target="_blank"
               rel="noopener noreferrer"
               overlay
@@ -49,45 +51,48 @@ const WorkDetails = () => {
           )}
         </AspectRatio>
 
+        <CardActions sx={{ 
+          display: 'flex', 
+          justifyContent: 'stretch', 
+          gap: 2,
+        }}>
+          {work.links.map((link, index) => (
+            <Button
+              key={index}
+              color="neutral"
+              component="a"
+              href={link.url}
+              target="_blank"
+              rel="noopener noreferrer"
+              variant="outlined"
+              startDecorator={<OpenInNew />}
+              sx={{ flexGrow: 1 }}
+            >
+              {link.name}
+            </Button>
+          ))}
+        </CardActions>
+
         <CardContent>
-          <Typography level="body-lg" sx={{ mb: 0 }}>
+          <Typography level="body-lg">
             {work.subtitle}
           </Typography>
-          <Typography level="h2" sx={{ mb: 2 }}>
+          <Typography level="h2">
             {work.title}
           </Typography>
-
-          <Grid container spacing={2} sx={{ mb: 2 }}>
-            <Grid xs={12} sm={6}>
-              <Typography level="title-md">Client/Project:</Typography>
-              <Typography>{work.subtitle}</Typography>
-            </Grid>
-            <Grid xs={12} sm={6}>
-              <Typography level="title-md">Date:</Typography>
-              <Typography>{work.date}</Typography>
-            </Grid>
-            <Grid xs={12}>
-              <Typography level="title-md">Description:</Typography>
-              <Typography>{work.description}</Typography>
-            </Grid>
-            <Grid xs={12}>
-              <Typography level="title-md">Project Link:</Typography>
-              <Link
-                href={work.url}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                View Project
-              </Link>
-            </Grid>
-          </Grid>
+          <Typography level="body-sm">
+            {work.date}
+          </Typography>
+          <Typography sx={{ mb: 2 }}>
+            {work.description}
+          </Typography>
 
           <Typography level="title-md" sx={{ mb: 1 }}>
             Tags:
           </Typography>
           <Stack direction="row" spacing={1} sx={{ mb: 2 }} flexWrap="wrap">
             {work.tags.map((tag) => (
-              <Chip key={tag} size="lg" variant="soft">
+              <Chip key={tag} size="sm" variant="soft">
                 {tag}
               </Chip>
             ))}

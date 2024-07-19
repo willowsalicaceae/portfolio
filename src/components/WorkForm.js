@@ -6,28 +6,35 @@ const WorkForm = ({ onSubmit }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-
-    // Updated regex pattern to include hasVideo
+  
     const workPattern = /(.+)\n(.+) - (.+)\n(.+)\n(.+)\n(.+)\n(.+)?\n(.+)?\n(.+)?\n(.+)?/g;
     const itemPattern = /([^,]+)/g;
-
+    const linkPattern = /([^:]+):\s*([^,\n]+)(?:,\s*)?/g;
+  
     const works = [];
-
+  
     let match;
     while ((match = workPattern.exec(portfolioData)) !== null) {
-      const [, id, subtitle, title, date, url, description, tagsString = '', softwareString = '', relevancyString = '', hasVideoString = ''] = match;
-
+      const [, id, subtitle, title, date, linksString, description, tagsString = '', softwareString = '', relevancyString = '', hasVideoString = ''] = match;
+  
       const tags = (tagsString.match(itemPattern) || []).map((tag) => tag.trim());
       const software = (softwareString.match(itemPattern) || []).map((sw) => sw.trim());
       const relevancy = parseInt(relevancyString.trim()) || 0;
       const hasVideo = hasVideoString.trim().toLowerCase() === 'true';
+  
+      const links = [];
+      let linkMatch;
+      while ((linkMatch = linkPattern.exec(linksString)) !== null) {
+        const [, name, url] = linkMatch;
+        links.push({ name: name.trim(), url: url.trim() });
+      }
 
       const work = {
         id: id.trim(),
         subtitle: subtitle.trim(),
         title: title.trim(),
         date: date.trim(),
-        url: url.trim(),
+        links,
         description: description.trim(),
         tags,
         software,
@@ -60,7 +67,15 @@ const WorkForm = ({ onSubmit }) => {
         value={portfolioData}
         onChange={(e) => setPortfolioData(e.target.value)}
         minRows={10}
-        placeholder="Paste portfolio data here"
+        placeholder={`id
+          subtitle - title
+          date
+          Link1Name: Link1URL, Link2Name: Link2URL
+          description
+          tag1, tag2, tag3
+          software1, software2
+          relevancy
+          hasVideo`}
       />
       <Button type="submit">Submit</Button>
     </Box>
