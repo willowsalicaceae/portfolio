@@ -524,28 +524,35 @@ const WorkForm = ({ onSubmit }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-
-    // Updated regex pattern to include hasVideo
+  
     const workPattern = /(.+)\n(.+) - (.+)\n(.+)\n(.+)\n(.+)\n(.+)?\n(.+)?\n(.+)?\n(.+)?/g;
     const itemPattern = /([^,]+)/g;
-
+    const linkPattern = /([^:]+):\s*([^,\n]+)(?:,\s*)?/g;
+  
     const works = [];
-
+  
     let match;
     while ((match = workPattern.exec(portfolioData)) !== null) {
-      const [, id, subtitle, title, date, url, description, tagsString = '', softwareString = '', relevancyString = '', hasVideoString = ''] = match;
-
+      const [, id, subtitle, title, date, linksString, description, tagsString = '', softwareString = '', relevancyString = '', hasVideoString = ''] = match;
+  
       const tags = (tagsString.match(itemPattern) || []).map((tag) => tag.trim());
       const software = (softwareString.match(itemPattern) || []).map((sw) => sw.trim());
       const relevancy = parseInt(relevancyString.trim()) || 0;
       const hasVideo = hasVideoString.trim().toLowerCase() === 'true';
+  
+      const links = [];
+      let linkMatch;
+      while ((linkMatch = linkPattern.exec(linksString)) !== null) {
+        const [, name, url] = linkMatch;
+        links.push({ name: name.trim(), url: url.trim() });
+      }
 
       const work = {
         id: id.trim(),
         subtitle: subtitle.trim(),
         title: title.trim(),
         date: date.trim(),
-        url: url.trim(),
+        links,
         description: description.trim(),
         tags,
         software,
@@ -578,7 +585,15 @@ const WorkForm = ({ onSubmit }) => {
         value={portfolioData}
         onChange={(e) => setPortfolioData(e.target.value)}
         minRows={10}
-        placeholder="Paste portfolio data here"
+        placeholder={`id
+          subtitle - title
+          date
+          Link1Name: Link1URL, Link2Name: Link2URL
+          description
+          tag1, tag2, tag3
+          software1, software2
+          relevancy
+          hasVideo`}
       />
       <Button type="submit">Submit</Button>
     </Box>
@@ -827,7 +842,12 @@ const portfolioData = [
     "subtitle": "Dizzy Spins & Landon Sears",
     "title": "Corner of My Eye (Radio Edit)",
     "date": "Apr 10, 2024",
-    "url": "https://www.youtube.com/watch?v=bWBdWwz6k2s",
+    "links": [
+      {
+        "name": "Visualizer",
+        "url": "https://www.youtube.com/watch?v=bWBdWwz6k2s"
+      }
+    ],
     "description": "Created visualizer",
     "tags": [
       "Video Editing",
@@ -846,7 +866,12 @@ const portfolioData = [
     "subtitle": "Dizzy Spins",
     "title": "One Night Out",
     "date": "Feb 10, 2024",
-    "url": "https://www.youtube.com/watch?v=OxVBComxisI",
+    "links": [
+      {
+        "name": "Visualizer",
+        "url": "https://www.youtube.com/watch?v=OxVBComxisI"
+      }
+    ],
     "description": "Created visualizer",
     "tags": [
       "Video Editing",
@@ -865,7 +890,12 @@ const portfolioData = [
     "subtitle": "Dizzy Spins",
     "title": "False Permanence",
     "date": "Feb 6, 2024",
-    "url": "https://www.youtube.com/watch?v=-elwaC0Cciw",
+    "links": [
+      {
+        "name": "Visualizer",
+        "url": "https://www.youtube.com/watch?v=-elwaC0Cciw"
+      }
+    ],
     "description": "Created visualizer",
     "tags": [
       "Video Editing",
@@ -876,14 +906,24 @@ const portfolioData = [
       "After Effects",
       "Photoshop"
     ],
-    "relevancy": 5
+    "relevancy": 5,
+    "hasVideo": true
   },
   {
     "id": "chatbotcemetery",
     "subtitle": "UW INFO 350",
     "title": "Chatbot Cemetery",
     "date": "Mar 9, 2023",
-    "url": "https://chatbotcemetery.com/",
+    "links": [
+      {
+        "name": "Live Site",
+        "url": "https://chatbotcemetery.com/"
+      },
+      {
+        "name": "GitHub",
+        "url": "https://github.com/willowsalicaceae/chatbot-cemetery"
+      }
+    ],
     "description": "Created website",
     "tags": [
       "Web Development",
@@ -892,14 +932,24 @@ const portfolioData = [
     "software": [
       "React"
     ],
-    "relevancy": 5
+    "relevancy": 5,
+    "hasVideo": false
   },
   {
     "id": "weatherheatmap",
     "subtitle": "UW INFO 474",
     "title": "Weather Heatmap",
     "date": "Jun 7, 2023",
-    "url": "https://github.com/willowsalicaceae/weather-heatmap",
+    "links": [
+      {
+        "name": "Live Site",
+        "url": "https://willowsalicaceae.github.io/weather-heatmap/"
+      },
+      {
+        "name": "GitHub",
+        "url": "https://github.com/willowsalicaceae/weather-heatmap"
+      }
+    ],
     "description": "Created website",
     "tags": [
       "Web Development",
@@ -908,14 +958,28 @@ const portfolioData = [
     "software": [
       "D3"
     ],
-    "relevancy": 6
+    "relevancy": 6,
+    "hasVideo": false
   },
   {
     "id": "covid67",
     "subtitle": "UW iSchool Capstone",
     "title": "Virufy Cough Annotator",
     "date": "May 15, 2023",
-    "url": "https://willowsalicaceae.github.io/virufyCapstone/",
+    "links": [
+      {
+        "name": "Presentation Video",
+        "url": "https://www.youtube.com/watch?v=rmS8tXf0Z8M"
+      },
+      {
+        "name": "Live Site",
+        "url": "https://willowsalicaceae.github.io/virufyCapstone/"
+      },
+      {
+        "name": "GitHub",
+        "url": "https://willowsalicaceae.github.io/virufyCapstone/"
+      }
+    ],
     "description": "Designed website, created demonstration video",
     "tags": [
       "Web Development",
@@ -925,14 +989,24 @@ const portfolioData = [
       "React",
       "Node.js"
     ],
-    "relevancy": 6
+    "relevancy": 6,
+    "hasVideo": false
   },
   {
     "id": "walkseattle",
     "subtitle": "UW INFO 442",
     "title": "WalkSeattle",
     "date": "Jun 4, 2024",
-    "url": "https://github.com/willowsalicaceae/walk-seattle",
+    "links": [
+      {
+        "name": "Live Site",
+        "url": "https://walkseattle.vercel.app/"
+      },
+      {
+        "name": "GitHub",
+        "url": "https://github.com/willowsalicaceae/walk-seattle"
+      }
+    ],
     "description": "Developed website",
     "tags": [
       "Web Development",
@@ -942,14 +1016,20 @@ const portfolioData = [
       "React",
       "Node.js"
     ],
-    "relevancy": 9
+    "relevancy": 9,
+    "hasVideo": false
   },
   {
     "id": "realtalkepisode32",
     "subtitle": "Real Talk. with John Rudnicki",
     "title": "Dealing With Injury and UW Soccer with Levi Hawk",
     "date": "Sep 15, 2023",
-    "url": "https://www.youtube.com/watch?v=gYZnqejfgwg",
+    "links": [
+      {
+        "name": "Podcast Video",
+        "url": "https://www.youtube.com/watch?v=gYZnqejfgwg"
+      }
+    ],
     "description": "Videography, audio post-production",
     "tags": [
       "Video Editing",
@@ -958,14 +1038,20 @@ const portfolioData = [
     "software": [
       "Premiere Pro"
     ],
-    "relevancy": 5
+    "relevancy": 5,
+    "hasVideo": false
   },
   {
     "id": "cornerofmyeye",
     "subtitle": "Dizzy Spins & Landon Sears",
     "title": "Corner of My Eye",
     "date": "May 26, 2022",
-    "url": "https://www.youtube.com/watch?v=JvJnYMCz4-I",
+    "links": [
+      {
+        "name": "Visualizer",
+        "url": "https://www.youtube.com/watch?v=JvJnYMCz4-I"
+      }
+    ],
     "description": "Created visualizer",
     "tags": [
       "Video Editing",
@@ -978,6 +1064,75 @@ const portfolioData = [
     ],
     "relevancy": 8,
     "hasVideo": true
+  },
+  {
+    "id": "underrocksfreestyle",
+    "subtitle": "Dizzy Spins",
+    "title": "Under Rocks Freestyle (Official Lyric Video)",
+    "date": "Dec 16, 2023",
+    "links": [
+      {
+        "name": "Visualizer",
+        "url": "https://www.youtube.com/watch?v=P-Rf6GNCvF0"
+      }
+    ],
+    "description": "Created visualizer",
+    "tags": [
+      "Video Editing",
+      "Visualizer",
+      "Music"
+    ],
+    "software": [
+      "After Effects"
+    ],
+    "relevancy": 5,
+    "hasVideo": false
+  },
+  {
+    "id": "borderline",
+    "subtitle": "Dizzy Spins & Evan Braddock",
+    "title": "Borderline",
+    "date": "Jun 17, 2022",
+    "links": [
+      {
+        "name": "Visualizer",
+        "url": "https://www.youtube.com/watch?v=ZyElRGfkJEU"
+      }
+    ],
+    "description": "Created visualizer",
+    "tags": [
+      "Video Editing",
+      "Visualizer",
+      "Music"
+    ],
+    "software": [
+      "After Effects"
+    ],
+    "relevancy": 5,
+    "hasVideo": false
+  },
+  {
+    "id": "tripwire",
+    "subtitle": "Dizzy Spins",
+    "title": "Tripwire",
+    "date": "Jun 24, 2021",
+    "links": [
+      {
+        "name": "Visualizer",
+        "url": "https://www.youtube.com/watch?v=2LeTtfM625g"
+      }
+    ],
+    "description": "Created visualizer",
+    "tags": [
+      "Video Editing",
+      "Visualizer",
+      "Music"
+    ],
+    "software": [
+      "After Effects"
+    ],
+    "relevancy": 4,
+    "hasVideo": false
   }
 ];
 
@@ -1191,7 +1346,8 @@ export default Work;
 <file path="src\pages\WorkDetails.js">
 import React from 'react';
 import { useParams } from 'react-router-dom';
-import { Box, Typography, Card, CardContent, CardCover, Chip, Link, Stack, Grid, AspectRatio } from '@mui/joy';
+import { Box, Typography, Card, CardContent, CardActions, Chip, Link, Stack, Grid, AspectRatio, Button } from '@mui/joy';
+import OpenInNew from '@mui/icons-material/OpenInNew';
 import portfolioData from '../data/portfolioData';
 
 const WorkDetails = () => {
@@ -1202,12 +1358,13 @@ const WorkDetails = () => {
     return <Typography>Work not found</Typography>;
   }
 
-  const isYouTubeVideo = work.url.includes('youtube.com') || work.url.includes('youtu.be');
-  const videoId = isYouTubeVideo ? work.url.split(/v\/|v=|youtu\.be\//)[1].split(/[?&]/)[0] : null;
+  const mainLink = work.links[0];
+  const isYouTubeVideo = mainLink.url.includes('youtube.com') || mainLink.url.includes('youtu.be');
+  const videoId = isYouTubeVideo ? mainLink.url.split(/v\/|v=|youtu\.be\//)[1].split(/[?&]/)[0] : null;
 
   return (
     <Box sx={{ maxWidth: '800px', margin: '0 auto' }}>
-      <Card variant="plain" size="lg">
+      <Card variant="outlined">
         <AspectRatio ratio="16/9" sx={{
           borderRadius: 'sm',
           overflow: 'hidden',
@@ -1224,7 +1381,7 @@ const WorkDetails = () => {
             />
           ) : (
             <Link
-              href={work.url}
+              href={mainLink.url}
               target="_blank"
               rel="noopener noreferrer"
               overlay
@@ -1240,45 +1397,48 @@ const WorkDetails = () => {
           )}
         </AspectRatio>
 
+        <CardActions sx={{ 
+          display: 'flex', 
+          justifyContent: 'stretch', 
+          gap: 2,
+        }}>
+          {work.links.map((link, index) => (
+            <Button
+              key={index}
+              color="neutral"
+              component="a"
+              href={link.url}
+              target="_blank"
+              rel="noopener noreferrer"
+              variant="outlined"
+              startDecorator={<OpenInNew />}
+              sx={{ flexGrow: 1 }}
+            >
+              {link.name}
+            </Button>
+          ))}
+        </CardActions>
+
         <CardContent>
-          <Typography level="body-lg" sx={{ mb: 0 }}>
+          <Typography level="body-lg">
             {work.subtitle}
           </Typography>
-          <Typography level="h2" sx={{ mb: 2 }}>
+          <Typography level="h2">
             {work.title}
           </Typography>
-
-          <Grid container spacing={2} sx={{ mb: 2 }}>
-            <Grid xs={12} sm={6}>
-              <Typography level="title-md">Client/Project:</Typography>
-              <Typography>{work.subtitle}</Typography>
-            </Grid>
-            <Grid xs={12} sm={6}>
-              <Typography level="title-md">Date:</Typography>
-              <Typography>{work.date}</Typography>
-            </Grid>
-            <Grid xs={12}>
-              <Typography level="title-md">Description:</Typography>
-              <Typography>{work.description}</Typography>
-            </Grid>
-            <Grid xs={12}>
-              <Typography level="title-md">Project Link:</Typography>
-              <Link
-                href={work.url}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                View Project
-              </Link>
-            </Grid>
-          </Grid>
+          <Typography level="body-sm">
+            {work.date}
+          </Typography>
+          <Typography sx={{ mb: 2 }}>
+            {work.description}
+          </Typography>
 
           <Typography level="title-md" sx={{ mb: 1 }}>
             Tags:
           </Typography>
           <Stack direction="row" spacing={1} sx={{ mb: 2 }} flexWrap="wrap">
             {work.tags.map((tag) => (
-              <Chip key={tag} size="lg" variant="soft">
+              <Chip key={tag} size="sm" variant="soft">
                 {tag}
               </Chip>
             ))}
