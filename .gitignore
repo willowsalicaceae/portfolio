@@ -23,5 +23,5 @@ yarn-debug.log*
 yarn-error.log*
 
 # other
-compile.py
-compiled_js.txt
+/compile.py
+/compiled_js.txt
