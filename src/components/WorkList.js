@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Box, Grid, Card, CardCover, CardContent, Typography, Stack, Skeleton } from '@mui/joy';
+import { Box, Grid, Card, CardCover, CardContent, Typography, Stack, Skeleton, Tooltip } from '@mui/joy';
 
 const WorkCard = ({ work, animatedThumbnails }) => {
   const [isLoading, setIsLoading] = useState(true);
@@ -105,12 +105,13 @@ const WorkCard = ({ work, animatedThumbnails }) => {
           <Typography level="body2">{work.subtitle}</Typography>
           <Stack direction="row" spacing={1} mt={1}>
             {work.software.map((sw) => (
-              <img
-                key={sw}
-                src={`/icons/${sw}.svg`}
-                alt={sw}
-                style={{ width: '24px', height: '24px' }}
-              />
+              <Tooltip key={sw} title={sw} variant="outlined">
+                <img
+                  src={`/icons/${sw}.svg`}
+                  alt={sw}
+                  style={{ width: '24px', height: '24px' }}
+                />
+              </Tooltip>
             ))}
           </Stack>
         </CardContent>
