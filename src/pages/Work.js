@@ -1,35 +1,28 @@
 import { useState, useEffect } from 'react';
-import { Box, Typography } from '@mui/joy';
-import { useLocation } from 'react-router-dom';
-import WorkForm from '../components/WorkForm';
+import { Box, Typography, Modal, ModalDialog } from '@mui/joy';
 import WorkList from '../components/WorkList';
 import WorkControls from '../components/WorkControls';
+import WorkDetails from './WorkDetails';
 import portfolioData from '../data/portfolioData';
 
-const Work = () => {
+const Work = ({ initialSelectedTag }) => {
   const [works, setWorks] = useState([]);
   const [sortBy, setSortBy] = useState('relevancy');
-  const [selectedTag, setSelectedTag] = useState('');
+  const [selectedTag, setSelectedTag] = useState(initialSelectedTag || '');
   const [animatedThumbnails, setAnimatedThumbnails] = useState(true);
-  const location = useLocation();
+  const [selectedWork, setSelectedWork] = useState(null);
 
   useEffect(() => {
     setWorks(portfolioData);
-    const params = new URLSearchParams(location.search);
-    const tagFromUrl = params.get('tag');
-    if (tagFromUrl) {
-      setSelectedTag(tagFromUrl);
-    }
-
     const savedAnimatedThumbnails = localStorage.getItem('animatedThumbnails');
     if (savedAnimatedThumbnails !== null) {
       setAnimatedThumbnails(JSON.parse(savedAnimatedThumbnails));
     }
-  }, [location]);
+  }, []);
 
-  const handleAddWork = (newWorks) => {
-    setWorks(newWorks);
-  };
+  useEffect(() => {
+    setSelectedTag(initialSelectedTag);
+  }, [initialSelectedTag]);
 
   const handleSortChange = (newSortBy) => {
     setSortBy(newSortBy);
@@ -43,6 +36,14 @@ const Work = () => {
     const newValue = event.target.checked;
     setAnimatedThumbnails(newValue);
     localStorage.setItem('animatedThumbnails', JSON.stringify(newValue));
+  };
+
+  const handleWorkClick = (work) => {
+    setSelectedWork(work);
+  };
+
+  const handleCloseModal = () => {
+    setSelectedWork(null);
   };
 
   const sortedAndFilteredWorks = works
@@ -59,9 +60,8 @@ const Work = () => {
   const allTags = [...new Set(works.flatMap((work) => work.tags))];
 
   return (
-    <Box>
-      <Typography level="h1">My Work</Typography>
-      <WorkForm onSubmit={handleAddWork} />
+    <Box sx={{ py: 8 }}>
+      <Typography level="h1" sx={{ mb: 4 }}>My Work</Typography>
       <WorkControls
         sortBy={sortBy}
         onSortChange={handleSortChange}
@@ -71,7 +71,16 @@ const Work = () => {
         animatedThumbnails={animatedThumbnails}
         onAnimatedThumbnailsChange={handleAnimatedThumbnailsChange}
       />
-      <WorkList works={sortedAndFilteredWorks} animatedThumbnails={animatedThumbnails} />
+      <WorkList 
+        works={sortedAndFilteredWorks} 
+        animatedThumbnails={animatedThumbnails} 
+        onWorkClick={handleWorkClick}
+      />
+      <Modal open={!!selectedWork} onClose={handleCloseModal}>
+        <ModalDialog sx={{ maxWidth: 800, width: '100%' }}>
+          {selectedWork && <WorkDetails work={selectedWork} />}
+        </ModalDialog>
+      </Modal>
     </Box>
   );
 };

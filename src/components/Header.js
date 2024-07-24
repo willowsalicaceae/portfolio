@@ -2,11 +2,8 @@ import * as React from 'react';
 import { useColorScheme } from '@mui/joy/styles';
 import Box from '@mui/joy/Box';
 import IconButton from '@mui/joy/IconButton';
-import Stack from '@mui/joy/Stack';
 import Button from '@mui/joy/Button';
 import Tooltip from '@mui/joy/Tooltip';
-import { Link } from 'react-router-dom';
-import { useLocation } from 'react-router-dom';
 
 import DarkModeRoundedIcon from '@mui/icons-material/DarkModeRounded';
 import LightModeRoundedIcon from '@mui/icons-material/LightModeRounded';
@@ -31,11 +28,7 @@ function ColorSchemeToggle() {
         color="neutral"
         sx={{ alignSelf: 'center' }}
         onClick={() => {
-          if (mode === 'light') {
-            setMode('dark');
-          } else {
-            setMode('light');
-          }
+          setMode(mode === 'light' ? 'dark' : 'light');
         }}
       >
         {mode === 'light' ? <DarkModeRoundedIcon /> : <LightModeRoundedIcon />}
@@ -44,85 +37,53 @@ function ColorSchemeToggle() {
   );
 }
 
-export default function Header() {
-  const { pathname } = useLocation();
-  console.log(pathname)
+export default function Header({ scrollTo, homeRef, workRef, contactRef }) {
   return (
     <Box
-      sx={[
-        {
-          p: 2,
-          gap: 2,
-          bgcolor: 'background.surface',
-          display: 'flex',
-          flexDirection: 'row',
-          justifyContent: 'space-between',
-          alignItems: 'center',
-          gridColumn: '1 / -1',
-          borderBottom: '1px solid',
-          borderColor: 'divider',
-          position: 'sticky',
-          top: 0,
-          zIndex: 1100,
-        }
-      ]}
+      sx={{
+        p: 2,
+        gap: 2,
+        bgcolor: 'background.surface',
+        display: 'flex',
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        gridColumn: '1 / -1',
+        borderBottom: '1px solid',
+        borderColor: 'divider',
+        position: 'sticky',
+        top: 0,
+        zIndex: 1100,
+      }}
     >
-      <Box
-        sx={{
-          display: 'flex',
-          flexGrow: 1,
-          justifyContent: 'space-between',
-        }}
-      >
-        <Stack
-          direction="row"
-          justifyContent="center"
-          alignItems="center"
-          spacing={1}
-          sx={{ display: { xs: 'none', sm: 'flex' } }}
-        >
+      <Box sx={{ display: 'flex', flexGrow: 1, justifyContent: 'space-between' }}>
+        <Box sx={{ display: 'flex', flexDirection: 'row', gap: 1.5, alignItems: 'center' }}>
           <Button
             variant="plain"
             color="neutral"
-            aria-pressed={pathname === '/'}
-            component={Link}
-            to="/"
+            onClick={() => scrollTo(homeRef)}
             size="sm"
-            sx={{ alignSelf: 'center' }}
           >
-            About
+            Home
           </Button>
           <Button
             variant="plain"
             color="neutral"
-            aria-pressed={pathname === '/work/'}
-            component={Link}
-            to="/work/"
+            onClick={() => scrollTo(workRef)}
             size="sm"
-            sx={{ alignSelf: 'center' }}
           >
             Work
           </Button>
           <Button
             variant="plain"
             color="neutral"
-            aria-pressed={pathname === '/contact/'}
-            component={Link}
-            to="/contact/"
+            onClick={() => scrollTo(contactRef)}
             size="sm"
-            sx={{ alignSelf: 'center' }}
           >
             Contact
           </Button>
-        </Stack>
-        <Box
-          sx={{
-            display: 'flex',
-            flexDirection: 'row',
-            gap: 1.5,
-            alignItems: 'center',
-          }}
-        >
+        </Box>
+        <Box sx={{ display: 'flex', flexDirection: 'row', gap: 1.5, alignItems: 'center' }}>
           <Tooltip title="LinkedIn" variant="outlined">
             <IconButton
               size="sm"

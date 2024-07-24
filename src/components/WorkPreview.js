@@ -1,18 +1,18 @@
 import React from 'react';
 import { Box, Card, CardCover, Typography } from '@mui/joy';
-import { Link } from 'react-router-dom';
 import portfolioData from '../data/portfolioData';
 
 const WorkPreview = ({ workIds }) => {
-  const gap = 16; // 2 * 8px (theme's default spacing unit)
+  const gap = 16;
 
   return (
     <Box
       sx={{
         display: 'grid',
-        gridTemplateColumns: `repeat(6, 1fr)`,
+        gridTemplateColumns: 'repeat(2, 1fr)',
         gap: `${gap}px`,
-        p: 2
+        width: '100%',
+        maxWidth: '600px',
       }}
     >
       {workIds.map((workId, index) => {
@@ -23,13 +23,8 @@ const WorkPreview = ({ workIds }) => {
           <Box
             key={work.id}
             sx={{
-              gridColumn: workId.size === 2 ? 'span 4' : 'span 2',
-              position: 'relative',
-              '&::before': {
-                content: '""',
-                display: 'block',
-                paddingTop: workId.size === 2 ? '50%' : '100%',
-              },
+              gridColumn: workId.size === 2 ? 'span 2' : 'span 1',
+              aspectRatio: '1 / 1',
               opacity: 0,
               animation: 'fadeIn 0.5s forwards',
               animationDelay: `${index * 0.1}s`,
@@ -40,14 +35,9 @@ const WorkPreview = ({ workIds }) => {
             }}
           >
             <Card
-              component={Link}
-              to={`/work/${work.id}`}
               sx={{
-                position: 'absolute',
-                top: 0,
-                left: 0,
-                right: 0,
-                bottom: 0,
+                width: '100%',
+                height: '100%',
                 textDecoration: 'none',
               }}
             >
@@ -74,6 +64,8 @@ const WorkPreview = ({ workIds }) => {
                   sx={{
                     color: 'white',
                     position: 'absolute',
+                    bottom: 16,
+                    left: 16,
                   }}
                 >
                   {work.title}

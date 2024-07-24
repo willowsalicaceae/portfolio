@@ -1,29 +1,46 @@
 <file path="src\App.js">
-import React from 'react';
-import { BrowserRouter as Router, Route, Link, Routes } from 'react-router-dom';
-import { Box, Grid, Typography, CssBaseline, CssVarsProvider } from '@mui/joy';
+// src/App.js
+import React, { useRef } from 'react';
+import { CssVarsProvider, CssBaseline, Box } from '@mui/joy';
 import Header from './components/Header';
 import About from './pages/About';
 import Work from './pages/Work';
 import Contact from './pages/Contact';
-import WorkDetails from './pages/WorkDetails';
 import theme from './theme';
 
 const App = () => {
+  const aboutRef = useRef(null);
+  const workRef = useRef(null);
+  const contactRef = useRef(null);
+
+  const scrollTo = (ref) => {
+    ref.current.scrollIntoView({ behavior: 'smooth' });
+  };
+
   return (
-    <CssVarsProvider theme={theme}>
+    <CssVarsProvider theme={theme} defaultMode="system">
       <CssBaseline />
-      <Router>
-        <Header />
-        <Box sx={{ px: 3, py: 2 }}>
-          <Routes>
-            <Route path="/work" element={<Work />} />
-            <Route path="/work/:id" element={<WorkDetails />} />
-            <Route path="/contact" element={<Contact />} />
-            <Route path="/" element={<About />} />
-          </Routes>
+      <Box
+        sx={{
+          minHeight: '100vh',
+          bgcolor: 'background.body',
+          display: 'flex',
+          flexDirection: 'column',
+        }}
+      >
+        <Header scrollTo={scrollTo} aboutRef={aboutRef} workRef={workRef} contactRef={contactRef} />
+        <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
+          <Box ref={aboutRef}>
+            <About />
+          </Box>
+          <Box ref={workRef}>
+            <Work />
+          </Box>
+          <Box ref={contactRef}>
+            <Contact />
+          </Box>
         </Box>
-      </Router>
+      </Box>
     </CssVarsProvider>
   );
 };
@@ -211,11 +228,8 @@ import * as React from 'react';
 import { useColorScheme } from '@mui/joy/styles';
 import Box from '@mui/joy/Box';
 import IconButton from '@mui/joy/IconButton';
-import Stack from '@mui/joy/Stack';
 import Button from '@mui/joy/Button';
 import Tooltip from '@mui/joy/Tooltip';
-import { Link } from 'react-router-dom';
-import { useLocation } from 'react-router-dom';
 
 import DarkModeRoundedIcon from '@mui/icons-material/DarkModeRounded';
 import LightModeRoundedIcon from '@mui/icons-material/LightModeRounded';
@@ -253,9 +267,7 @@ function ColorSchemeToggle() {
   );
 }
 
-export default function Header() {
-  const { pathname } = useLocation();
-  console.log(pathname)
+export default function Header({ scrollTo, aboutRef, workRef, contactRef }) {
   return (
     <Box
       sx={[
@@ -283,47 +295,39 @@ export default function Header() {
           justifyContent: 'space-between',
         }}
       >
-        <Stack
-          direction="row"
-          justifyContent="center"
-          alignItems="center"
-          spacing={1}
-          sx={{ display: { xs: 'none', sm: 'flex' } }}
+        <Box
+          sx={{
+            display: 'flex',
+            flexDirection: 'row',
+            gap: 1.5,
+            alignItems: 'center',
+          }}
         >
           <Button
             variant="plain"
             color="neutral"
-            aria-pressed={pathname === '/'}
-            component={Link}
-            to="/"
+            onClick={() => scrollTo(aboutRef)}
             size="sm"
-            sx={{ alignSelf: 'center' }}
           >
             About
           </Button>
           <Button
             variant="plain"
             color="neutral"
-            aria-pressed={pathname === '/work/'}
-            component={Link}
-            to="/work/"
+            onClick={() => scrollTo(workRef)}
             size="sm"
-            sx={{ alignSelf: 'center' }}
           >
             Work
           </Button>
           <Button
             variant="plain"
             color="neutral"
-            aria-pressed={pathname === '/contact/'}
-            component={Link}
-            to="/contact/"
+            onClick={() => scrollTo(contactRef)}
             size="sm"
-            sx={{ alignSelf: 'center' }}
           >
             Contact
           </Button>
-        </Stack>
+        </Box>
         <Box
           sx={{
             display: 'flex',
@@ -605,10 +609,9 @@ export default WorkForm;
 
 <file path="src\components\WorkList.js">
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
-import { Box, Grid, Card, CardCover, CardContent, Typography, Stack, Skeleton } from '@mui/joy';
+import { Box, Grid, Card, CardCover, CardContent, Typography, Stack, Skeleton, Tooltip } from '@mui/joy';
 
-const WorkCard = ({ work, animatedThumbnails }) => {
+const WorkCard = ({ work, animatedThumbnails, onWorkClick }) => {
   const [isLoading, setIsLoading] = useState(true);
 
   const handleMediaLoaded = () => {
@@ -616,122 +619,123 @@ const WorkCard = ({ work, animatedThumbnails }) => {
   };
 
   return (
-    <Link to={`/work/${work.id}`}>
-      <Card
+    <Card
+      onClick={() => onWorkClick(work)}
+      sx={{
+        cursor: 'pointer',
+        position: 'relative',
+        overflow: 'hidden',
+        paddingTop: '50%',
+        '&:hover .overlay': {
+          opacity: 1,
+        },
+        '&:hover .card-content': {
+          opacity: 1,
+        },
+      }}
+    >
+      <CardCover
         sx={{
-          position: 'relative',
-          overflow: 'hidden',
-          paddingTop: '50%',
-          '&:hover .overlay': {
-            opacity: 1,
-          },
-          '&:hover .card-content': {
-            opacity: 1,
-          },
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          width: '100%',
+          height: '100%',
         }}
       >
-        <CardCover
+        {isLoading && (
+          <Skeleton
+            animation="wave"
+            variant="rectangular"
+            width="100%"
+            height="100%"
+          />
+        )}
+        {animatedThumbnails && work.hasVideo ? (
+          <video
+            src={`/videos/${work.id}.mp4`}
+            loop
+            muted
+            autoPlay
+            playsInline
+            style={{
+              objectFit: 'cover',
+              width: '100%',
+              height: '100%',
+              display: isLoading ? 'none' : 'block',
+            }}
+            onLoadedData={handleMediaLoaded}
+          />
+        ) : (
+          <img
+            src={`/images/thumbnails/${work.id}.jpg`}
+            srcSet={`/images/thumbnails/${work.id}.jpg 2x`}
+            loading="lazy"
+            alt={work.title}
+            style={{
+              objectFit: 'cover',
+              width: '100%',
+              height: '100%',
+              display: isLoading ? 'none' : 'block',
+            }}
+            onLoad={handleMediaLoaded}
+          />
+        )}
+        <Box
+          className="overlay"
           sx={{
             position: 'absolute',
             top: 0,
             left: 0,
             width: '100%',
             height: '100%',
-          }}
-        >
-          {isLoading && (
-            <Skeleton
-              animation="wave"
-              variant="rectangular"
-              width="100%"
-              height="100%"
-            />
-          )}
-          {animatedThumbnails && work.hasVideo ? (
-            <video
-              src={`/videos/${work.id}.mp4`}
-              loop
-              muted
-              autoPlay
-              playsInline
-              style={{
-                objectFit: 'cover',
-                width: '100%',
-                height: '100%',
-                display: isLoading ? 'none' : 'block',
-              }}
-              onLoadedData={handleMediaLoaded}
-            />
-          ) : (
-            <img
-              src={`/images/thumbnails/${work.id}.jpg`}
-              srcSet={`/images/thumbnails/${work.id}.jpg 2x`}
-              loading="lazy"
-              alt={work.title}
-              style={{
-                objectFit: 'cover',
-                width: '100%',
-                height: '100%',
-                display: isLoading ? 'none' : 'block',
-              }}
-              onLoad={handleMediaLoaded}
-            />
-          )}
-          <Box
-            className="overlay"
-            sx={{
-              position: 'absolute',
-              top: 0,
-              left: 0,
-              width: '100%',
-              height: '100%',
-              background: 'linear-gradient(to bottom, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.8))',
-              opacity: 0,
-              transition: 'opacity 0.3s',
-            }}
-          />
-        </CardCover>
-        <CardContent
-          className="card-content"
-          sx={{
-            position: 'absolute',
-            bottom: 0,
-            left: 0,
-            width: '100%',
+            background: 'linear-gradient(to bottom, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.8))',
             opacity: 0,
             transition: 'opacity 0.3s',
-            color: '#fff',
-            padding: 2,
-            '& .MuiTypography-root': {
-              color: '#fff',
-            },
           }}
-        >
-          <Typography level="h3">{work.title}</Typography>
-          <Typography level="body2">{work.subtitle}</Typography>
-          <Stack direction="row" spacing={1} mt={1}>
-            {work.software.map((sw) => (
+        />
+      </CardCover>
+      <CardContent
+        className="card-content"
+        sx={{
+          position: 'absolute',
+          bottom: 0,
+          left: 0,
+          width: '100%',
+          opacity: 0,
+          transition: 'opacity 0.3s',
+          color: '#fff',
+          padding: 2,
+          '& .MuiTypography-root': {
+            color: '#fff',
+          },
+        }}
+      >
+        <Typography level="h3">{work.title}</Typography>
+        <Typography level="body2">{work.subtitle}</Typography>
+        <Stack direction="row" spacing={1} mt={1}>
+          {work.software.map((sw) => (
+            <Tooltip key={sw} title={sw} variant="outlined">
               <img
-                key={sw}
                 src={`/icons/${sw}.svg`}
                 alt={sw}
                 style={{ width: '24px', height: '24px' }}
               />
-            ))}
-          </Stack>
-        </CardContent>
-      </Card>
-    </Link>
+            </Tooltip>
+          ))}
+        </Stack>
+      </CardContent>
+    </Card>
   );
 };
 
-const WorkList = ({ works, animatedThumbnails }) => {
+const WorkList = ({ works, animatedThumbnails, onWorkClick }) => {
   return (
     <Box>
       <Grid container spacing={2}>
         {works.map((work) => (
           <Grid key={work.id} xs={12} sm={6} md={4}>
-            <WorkCard work={work} animatedThumbnails={animatedThumbnails} />
+            <WorkCard work={work} animatedThumbnails={animatedThumbnails} onWorkClick={onWorkClick} />
           </Grid>
         ))}
       </Grid>
@@ -745,19 +749,19 @@ export default WorkList;
 <file path="src\components\WorkPreview.js">
 import React from 'react';
 import { Box, Card, CardCover, Typography } from '@mui/joy';
-import { Link } from 'react-router-dom';
 import portfolioData from '../data/portfolioData';
 
 const WorkPreview = ({ workIds }) => {
-  const gap = 16; // 2 * 8px (theme's default spacing unit)
+  const gap = 16;
 
   return (
     <Box
       sx={{
         display: 'grid',
-        gridTemplateColumns: `repeat(6, 1fr)`,
+        gridTemplateColumns: 'repeat(2, 1fr)',
         gap: `${gap}px`,
-        p: 2
+        width: '100%',
+        maxWidth: '600px',
       }}
     >
       {workIds.map((workId, index) => {
@@ -768,13 +772,8 @@ const WorkPreview = ({ workIds }) => {
           <Box
             key={work.id}
             sx={{
-              gridColumn: workId.size === 2 ? 'span 4' : 'span 2',
-              position: 'relative',
-              '&::before': {
-                content: '""',
-                display: 'block',
-                paddingTop: workId.size === 2 ? '50%' : '100%',
-              },
+              gridColumn: workId.size === 2 ? 'span 2' : 'span 1',
+              aspectRatio: '1 / 1',
               opacity: 0,
               animation: 'fadeIn 0.5s forwards',
               animationDelay: `${index * 0.1}s`,
@@ -785,14 +784,9 @@ const WorkPreview = ({ workIds }) => {
             }}
           >
             <Card
-              component={Link}
-              to={`/work/${work.id}`}
               sx={{
-                position: 'absolute',
-                top: 0,
-                left: 0,
-                right: 0,
-                bottom: 0,
+                width: '100%',
+                height: '100%',
                 textDecoration: 'none',
               }}
             >
@@ -819,6 +813,8 @@ const WorkPreview = ({ workIds }) => {
                   sx={{
                     color: 'white',
                     position: 'absolute',
+                    bottom: 16,
+                    left: 16,
                   }}
                 >
                   {work.title}
@@ -1141,8 +1137,7 @@ export default portfolioData;
 
 <file path="src\pages\About.js">
 import React, { useState, useEffect } from 'react';
-import { Box, Typography, Grid } from '@mui/joy';
-import { Link } from 'react-router-dom';
+import { Box, Typography, Grid, Container } from '@mui/joy';
 import TypewriterEffect from '../components/TypewriterEffect';
 import WorkPreview from '../components/WorkPreview';
 
@@ -1191,52 +1186,54 @@ const About = () => {
   };
 
   return (
-    <Grid container spacing={4}>
-      <Grid xs={12} md={6}>
-        <Box sx={{ p: 4 }}>
-          <TypewriterEffect 
-            lines={lines} 
-            onComplete={() => setTypingComplete(true)} 
-          />
-          <Box sx={{ mt: 4 }}>
-            {categories.map((category, index) => (
-              <Typography
-                key={category}
-                level="h1"
-                component={Link}
-                to={`/work?tag=${encodeURIComponent(category)}`}
-                sx={{
-                  display: 'block',
-                  color: 'text.primary',
-                  textDecoration: 'none',
-                  mt: 2,
-                  fontSize: '4rem',
-                  fontWeight: 'bold',
-                  opacity: showCategories ? 1 : 0,
-                  transition: 'opacity 0.5s, color 0.3s, text-decoration-color 0.3s',
-                  transitionDelay: `${index * 0.2}s`,
-                  '&:hover': { 
-                    color: 'primary.main',
-                    textDecorationColor: 'rgba(var(--joy-palette-primary-mainChannel) / 1)',
-                  },
-                  textDecorationLine: 'underline',
-                  textDecorationColor: selectedCategory === category 
-                    ? 'rgba(var(--joy-palette-primary-mainChannel) / 0.5)'
-                    : 'transparent',
-                  textUnderlineOffset: '0.1em',
-                }}
-                onMouseEnter={() => handleCategoryChange(category)}
-              >
-                {category}
-              </Typography>
-            ))}
+    <Container maxWidth={false} disableGutters sx={{ height: '100vh', display: 'flex', flexDirection: 'column' }}>
+      <Grid container sx={{ flexGrow: 1 }}>
+        <Grid xs={12} md={6} sx={{ display: 'flex', alignItems: 'center', p: 4 }}>
+          <Box>
+            <TypewriterEffect 
+              lines={lines} 
+              onComplete={() => setTypingComplete(true)} 
+            />
+            <Box sx={{ mt: 4 }}>
+              {categories.map((category, index) => (
+                <Typography
+                  key={category}
+                  level="h1"
+                  component="div"
+                  onClick={() => handleCategoryChange(category)}
+                  sx={{
+                    display: 'block',
+                    color: 'text.primary',
+                    textDecoration: 'none',
+                    mt: 2,
+                    fontSize: { xs: '2.5rem', md: '3.5rem' },
+                    fontWeight: 'bold',
+                    opacity: showCategories ? 1 : 0,
+                    transition: 'opacity 0.5s, color 0.3s, text-decoration-color 0.3s',
+                    transitionDelay: `${index * 0.2}s`,
+                    '&:hover': { 
+                      color: 'primary.main',
+                      textDecorationColor: 'rgba(var(--joy-palette-primary-mainChannel) / 1)',
+                      cursor: 'pointer',
+                    },
+                    textDecorationLine: 'underline',
+                    textDecorationColor: selectedCategory === category 
+                      ? 'rgba(var(--joy-palette-primary-mainChannel) / 0.5)'
+                      : 'transparent',
+                    textUnderlineOffset: '0.1em',
+                  }}
+                >
+                  {category}
+                </Typography>
+              ))}
+            </Box>
           </Box>
-        </Box>
+        </Grid>
+        <Grid xs={12} md={6} sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', p: 4 }}>
+          {showWorks && <WorkPreview workIds={workPreviews[selectedCategory]} />}
+        </Grid>
       </Grid>
-      <Grid xs={12} md={6}>
-        {showWorks && <WorkPreview workIds={workPreviews[selectedCategory]} />}
-      </Grid>
-    </Grid>
+    </Container>
   );
 };
 
@@ -1263,11 +1260,11 @@ export default Contact;
 
 <file path="src\pages\Work.js">
 import { useState, useEffect } from 'react';
-import { Box, Typography } from '@mui/joy';
-import { useLocation } from 'react-router-dom';
+import { Box, Typography, Modal, ModalDialog } from '@mui/joy';
 import WorkForm from '../components/WorkForm';
 import WorkList from '../components/WorkList';
 import WorkControls from '../components/WorkControls';
+import WorkDetails from './WorkDetails';
 import portfolioData from '../data/portfolioData';
 
 const Work = () => {
@@ -1275,21 +1272,15 @@ const Work = () => {
   const [sortBy, setSortBy] = useState('relevancy');
   const [selectedTag, setSelectedTag] = useState('');
   const [animatedThumbnails, setAnimatedThumbnails] = useState(true);
-  const location = useLocation();
+  const [selectedWork, setSelectedWork] = useState(null);
 
   useEffect(() => {
     setWorks(portfolioData);
-    const params = new URLSearchParams(location.search);
-    const tagFromUrl = params.get('tag');
-    if (tagFromUrl) {
-      setSelectedTag(tagFromUrl);
-    }
-
     const savedAnimatedThumbnails = localStorage.getItem('animatedThumbnails');
     if (savedAnimatedThumbnails !== null) {
       setAnimatedThumbnails(JSON.parse(savedAnimatedThumbnails));
     }
-  }, [location]);
+  }, []);
 
   const handleAddWork = (newWorks) => {
     setWorks(newWorks);
@@ -1307,6 +1298,14 @@ const Work = () => {
     const newValue = event.target.checked;
     setAnimatedThumbnails(newValue);
     localStorage.setItem('animatedThumbnails', JSON.stringify(newValue));
+  };
+
+  const handleWorkClick = (work) => {
+    setSelectedWork(work);
+  };
+
+  const handleCloseModal = () => {
+    setSelectedWork(null);
   };
 
   const sortedAndFilteredWorks = works
@@ -1335,7 +1334,16 @@ const Work = () => {
         animatedThumbnails={animatedThumbnails}
         onAnimatedThumbnailsChange={handleAnimatedThumbnailsChange}
       />
-      <WorkList works={sortedAndFilteredWorks} animatedThumbnails={animatedThumbnails} />
+      <WorkList 
+        works={sortedAndFilteredWorks} 
+        animatedThumbnails={animatedThumbnails} 
+        onWorkClick={handleWorkClick}
+      />
+      <Modal open={!!selectedWork} onClose={handleCloseModal}>
+        <ModalDialog sx={{ maxWidth: 800, width: '100%' }}>
+          {selectedWork && <WorkDetails work={selectedWork} />}
+        </ModalDialog>
+      </Modal>
     </Box>
   );
 };
@@ -1345,15 +1353,10 @@ export default Work;
 
 <file path="src\pages\WorkDetails.js">
 import React from 'react';
-import { useParams } from 'react-router-dom';
-import { Box, Typography, Card, CardContent, CardActions, Chip, Link, Stack, Grid, AspectRatio, Button } from '@mui/joy';
+import { Box, Typography, CardContent, CardActions, Chip, Link, Stack, AspectRatio, Button } from '@mui/joy';
 import OpenInNew from '@mui/icons-material/OpenInNew';
-import portfolioData from '../data/portfolioData';
 
-const WorkDetails = () => {
-  const { id } = useParams();
-  const work = portfolioData.find((work) => work.id === id);
-
+const WorkDetails = ({ work }) => {
   if (!work) {
     return <Typography>Work not found</Typography>;
   }
@@ -1363,102 +1366,100 @@ const WorkDetails = () => {
   const videoId = isYouTubeVideo ? mainLink.url.split(/v\/|v=|youtu\.be\//)[1].split(/[?&]/)[0] : null;
 
   return (
-    <Box sx={{ maxWidth: '800px', margin: '0 auto' }}>
-      <Card variant="outlined">
-        <AspectRatio ratio="16/9" sx={{
-          borderRadius: 'sm',
-          overflow: 'hidden',
-          '& iframe': {
-            border: 'none',
-          }
-        }}>
-          {isYouTubeVideo ? (
-            <iframe
-              src={`https://www.youtube-nocookie.com/embed/${videoId}?modestbranding=1&rel=0`}
-              title={work.title}
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-              allowFullScreen
+    <Box>
+      <AspectRatio ratio="16/9" sx={{
+        borderRadius: 'sm',
+        overflow: 'hidden',
+        '& iframe': {
+          border: 'none',
+        }
+      }}>
+        {isYouTubeVideo ? (
+          <iframe
+            src={`https://www.youtube-nocookie.com/embed/${videoId}?modestbranding=1&rel=0`}
+            title={work.title}
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowFullScreen
+          />
+        ) : (
+          <Link
+            href={mainLink.url}
+            target="_blank"
+            rel="noopener noreferrer"
+            overlay
+          >
+            <img
+              src={`/images/thumbnails/${work.id}.jpg`}
+              srcSet={`/images/thumbnails/${work.id}.jpg 2x`}
+              loading="lazy"
+              alt={work.title}
+              style={{ objectFit: 'cover', width: '100%', height: '100%' }}
             />
-          ) : (
-            <Link
-              href={mainLink.url}
-              target="_blank"
-              rel="noopener noreferrer"
-              overlay
-            >
-              <img
-                src={`/images/thumbnails/${work.id}.jpg`}
-                srcSet={`/images/thumbnails/${work.id}.jpg 2x`}
-                loading="lazy"
-                alt={work.title}
-                style={{ objectFit: 'cover', width: '100%', height: '100%' }}
-              />
-            </Link>
-          )}
-        </AspectRatio>
+          </Link>
+        )}
+      </AspectRatio>
 
-        <CardActions sx={{ 
-          display: 'flex', 
-          justifyContent: 'stretch', 
-          gap: 2,
-        }}>
-          {work.links.map((link, index) => (
-            <Button
-              key={index}
-              color="neutral"
-              component="a"
-              href={link.url}
-              target="_blank"
-              rel="noopener noreferrer"
-              variant="outlined"
-              startDecorator={<OpenInNew />}
-              sx={{ flexGrow: 1 }}
-            >
-              {link.name}
-            </Button>
+      <CardActions sx={{ 
+        display: 'flex', 
+        justifyContent: 'stretch', 
+        gap: 2,
+      }}>
+        {work.links.map((link, index) => (
+          <Button
+            key={index}
+            color="neutral"
+            component="a"
+            href={link.url}
+            target="_blank"
+            rel="noopener noreferrer"
+            variant="outlined"
+            startDecorator={<OpenInNew />}
+            sx={{ flexGrow: 1 }}
+          >
+            {link.name}
+          </Button>
+        ))}
+      </CardActions>
+
+      <CardContent>
+        <Typography level="body-lg">
+          {work.subtitle}
+        </Typography>
+        <Typography level="h2">
+          {work.title}
+        </Typography>
+        <Typography level="body-sm">
+          {work.date}
+        </Typography>
+        <Typography sx={{ mb: 2 }}>
+          {work.description}
+        </Typography>
+
+        <Typography level="title-md" sx={{ mb: 1 }}>
+          Tags:
+        </Typography>
+        <Stack direction="row" spacing={1} sx={{ mb: 2 }} flexWrap="wrap">
+          {work.tags.map((tag) => (
+            <Chip key={tag} size="sm" variant="soft">
+              {tag}
+            </Chip>
           ))}
-        </CardActions>
+        </Stack>
 
-        <CardContent>
-          <Typography level="body-lg">
-            {work.subtitle}
-          </Typography>
-          <Typography level="h2">
-            {work.title}
-          </Typography>
-          <Typography level="body-sm">
-            {work.date}
-          </Typography>
-          <Typography sx={{ mb: 2 }}>
-            {work.description}
-          </Typography>
-
-          <Typography level="title-md" sx={{ mb: 1 }}>
-            Tags:
-          </Typography>
-          <Stack direction="row" spacing={1} sx={{ mb: 2 }} flexWrap="wrap">
-            {work.tags.map((tag) => (
-              <Chip key={tag} size="sm" variant="soft">
-                {tag}
-              </Chip>
-            ))}
-          </Stack>
-
-          <Typography level="title-md" sx={{ mb: 1 }}>
-            Software Used:
-          </Typography>
-          <Stack direction="row" spacing={1} sx={{ mb: 2 }}>
-            {work.software.map((sw) => (
-              <img
-                key={sw}
-                src={`/icons/${sw}.svg`}
-                alt={sw}
-                style={{ width: '24px', height: '24px' }}
-              />
-            ))}
-          </Stack>
-        </CardContent>
-      </Card>
+        <Typography level="title-md" sx={{ mb: 1 }}>
+          Software Used:
+        </Typography>
+        <Stack direction="row" spacing={1} sx={{ mb: 2 }}>
+          {work.software.map((sw) => (
+            <img
+              key={sw}
+              src={`/icons/${sw}.svg`}
+              alt={sw}
+              style={{ width: '24px', height: '24px' }}
+            />
+          ))}
+        </Stack>
+      </CardContent>
     </Box>
   );
 };
