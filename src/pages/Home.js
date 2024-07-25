@@ -1,7 +1,8 @@
 import React from 'react';
 import { Box, Typography, Link } from '@mui/joy';
+import AnimatedWillow from '../components/AnimatedWillow';
 
-const Home = ({ onCategoryClick }) => {
+const Home = ({ onCategoryClick, animationsEnabled }) => {
   return (
     <Box sx={{ 
       py: 4,
@@ -13,9 +14,29 @@ const Home = ({ onCategoryClick }) => {
       <Box>
         <Typography level="h1" sx={{ 
           mb: 1,
-          fontSize: { xs: '2.5rem', md: '3.5rem' }
+          fontSize: { xs: '5rem', md: '7rem' },
+          lineHeight: 1,
         }}>
-          Hi, I'm Willow Frazey
+          Hi, I'm
+        </Typography>
+        <Typography 
+          level="h1" 
+          sx={{ 
+            mb: 2,
+            fontSize: { xs: '5rem', md: '7rem' },
+            lineHeight: 1,
+            color: 'primary.solidBg',
+            fontFamily: animationsEnabled ? 'inherit' : "'Borel', cursive",
+            display: 'flex',
+            alignItems: 'center',
+            height: { xs: '5rem', md: '7rem' }, // Match with font size
+          }}
+        >
+          {animationsEnabled ? (
+            <AnimatedWillow />
+          ) : (
+            "Willow"
+          )}
         </Typography>
         <Typography level="h2" sx={{ 
           fontSize: { xs: '1.25rem', md: '1.75rem' }

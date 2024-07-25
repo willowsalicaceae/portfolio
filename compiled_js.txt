@@ -1,20 +1,26 @@
 <file path="src\App.js">
-// src/App.js
 import React, { useRef } from 'react';
-import { CssVarsProvider, CssBaseline, Box } from '@mui/joy';
+import { CssVarsProvider, CssBaseline, Box, Container } from '@mui/joy';
 import Header from './components/Header';
-import About from './pages/About';
+import Home from './pages/Home';
 import Work from './pages/Work';
 import Contact from './pages/Contact';
 import theme from './theme';
 
 const App = () => {
-  const aboutRef = useRef(null);
+  const homeRef = useRef(null);
   const workRef = useRef(null);
   const contactRef = useRef(null);
 
+  const [selectedTag, setSelectedTag] = React.useState('');
+
   const scrollTo = (ref) => {
     ref.current.scrollIntoView({ behavior: 'smooth' });
+  };
+
+  const handleCategoryClick = (category) => {
+    setSelectedTag(category);
+    scrollTo(workRef);
   };
 
   return (
@@ -28,16 +34,26 @@ const App = () => {
           flexDirection: 'column',
         }}
       >
-        <Header scrollTo={scrollTo} aboutRef={aboutRef} workRef={workRef} contactRef={contactRef} />
-        <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
-          <Box ref={aboutRef}>
-            <About />
+        <Header scrollTo={scrollTo} homeRef={homeRef} workRef={workRef} contactRef={contactRef} />
+        <Box component="main" sx={{ flexGrow: 1 }}>
+          <Box id="home" ref={homeRef} sx={{ 
+            minHeight: '75vh', // Match this with the Home component
+            display: 'flex', 
+            alignItems: 'center' 
+          }}>
+            <Container maxWidth="lg">
+              <Home onCategoryClick={handleCategoryClick} />
+            </Container>
           </Box>
-          <Box ref={workRef}>
-            <Work />
+          <Box id="work" ref={workRef}>
+            <Container maxWidth="lg">
+              <Work initialSelectedTag={selectedTag} />
+            </Container>
           </Box>
-          <Box ref={contactRef}>
-            <Contact />
+          <Box id="contact" ref={contactRef}>
+            <Container maxWidth="lg">
+              <Contact />
+            </Container>
           </Box>
         </Box>
       </Box>
@@ -254,11 +270,7 @@ function ColorSchemeToggle() {
         color="neutral"
         sx={{ alignSelf: 'center' }}
         onClick={() => {
-          if (mode === 'light') {
-            setMode('dark');
-          } else {
-            setMode('light');
-          }
+          setMode(mode === 'light' ? 'dark' : 'light');
         }}
       >
         {mode === 'light' ? <DarkModeRoundedIcon /> : <LightModeRoundedIcon />}
@@ -267,49 +279,34 @@ function ColorSchemeToggle() {
   );
 }
 
-export default function Header({ scrollTo, aboutRef, workRef, contactRef }) {
+export default function Header({ scrollTo, homeRef, workRef, contactRef }) {
   return (
     <Box
-      sx={[
-        {
-          p: 2,
-          gap: 2,
-          bgcolor: 'background.surface',
-          display: 'flex',
-          flexDirection: 'row',
-          justifyContent: 'space-between',
-          alignItems: 'center',
-          gridColumn: '1 / -1',
-          borderBottom: '1px solid',
-          borderColor: 'divider',
-          position: 'sticky',
-          top: 0,
-          zIndex: 1100,
-        }
-      ]}
+      sx={{
+        p: 2,
+        gap: 2,
+        bgcolor: 'background.surface',
+        display: 'flex',
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        gridColumn: '1 / -1',
+        borderBottom: '1px solid',
+        borderColor: 'divider',
+        position: 'sticky',
+        top: 0,
+        zIndex: 1100,
+      }}
     >
-      <Box
-        sx={{
-          display: 'flex',
-          flexGrow: 1,
-          justifyContent: 'space-between',
-        }}
-      >
-        <Box
-          sx={{
-            display: 'flex',
-            flexDirection: 'row',
-            gap: 1.5,
-            alignItems: 'center',
-          }}
-        >
+      <Box sx={{ display: 'flex', flexGrow: 1, justifyContent: 'space-between' }}>
+        <Box sx={{ display: 'flex', flexDirection: 'row', gap: 1.5, alignItems: 'center' }}>
           <Button
             variant="plain"
             color="neutral"
-            onClick={() => scrollTo(aboutRef)}
+            onClick={() => scrollTo(homeRef)}
             size="sm"
           >
-            About
+            Home
           </Button>
           <Button
             variant="plain"
@@ -328,14 +325,7 @@ export default function Header({ scrollTo, aboutRef, workRef, contactRef }) {
             Contact
           </Button>
         </Box>
-        <Box
-          sx={{
-            display: 'flex',
-            flexDirection: 'row',
-            gap: 1.5,
-            alignItems: 'center',
-          }}
-        >
+        <Box sx={{ display: 'flex', flexDirection: 'row', gap: 1.5, alignItems: 'center' }}>
           <Tooltip title="LinkedIn" variant="outlined">
             <IconButton
               size="sm"
@@ -1258,19 +1248,66 @@ const Contact = () => {
 export default Contact;
 </file>
 
+<file path="src\pages\Home.js">
+import React from 'react';
+import { Box, Typography, Link } from '@mui/joy';
+
+const Home = ({ onCategoryClick }) => {
+  return (
+    <Box sx={{ 
+      py: 4,
+      minHeight: '75vh',
+      display: 'flex', 
+      flexDirection: 'column', 
+      justifyContent: 'center'
+    }}>
+      <Box>
+        <Typography level="h1" sx={{ 
+          mb: 1,
+          fontSize: { xs: '2.5rem', md: '3.5rem' }
+        }}>
+          Hi, I'm Willow Frazey
+        </Typography>
+        <Typography level="h2" sx={{ 
+          fontSize: { xs: '1.25rem', md: '1.75rem' }
+        }}>
+          I specialize in{' '}
+          <Link 
+            component="button"
+            onClick={() => onCategoryClick('Video Editing')}
+            sx={{ cursor: 'pointer' }}
+          >
+            Video Editing
+          </Link>
+          {' '}and{' '}
+          <Link 
+            component="button"
+            onClick={() => onCategoryClick('Web Development')}
+            sx={{ cursor: 'pointer' }}
+          >
+            Web Development
+          </Link>
+        </Typography>
+      </Box>
+    </Box>
+  );
+};
+
+export default Home;
+</file>
+
 <file path="src\pages\Work.js">
 import { useState, useEffect } from 'react';
 import { Box, Typography, Modal, ModalDialog } from '@mui/joy';
-import WorkForm from '../components/WorkForm';
 import WorkList from '../components/WorkList';
 import WorkControls from '../components/WorkControls';
 import WorkDetails from './WorkDetails';
 import portfolioData from '../data/portfolioData';
 
-const Work = () => {
+const Work = ({ initialSelectedTag }) => {
   const [works, setWorks] = useState([]);
   const [sortBy, setSortBy] = useState('relevancy');
-  const [selectedTag, setSelectedTag] = useState('');
+  const [selectedTag, setSelectedTag] = useState(initialSelectedTag || '');
   const [animatedThumbnails, setAnimatedThumbnails] = useState(true);
   const [selectedWork, setSelectedWork] = useState(null);
 
@@ -1282,9 +1319,9 @@ const Work = () => {
     }
   }, []);
 
-  const handleAddWork = (newWorks) => {
-    setWorks(newWorks);
-  };
+  useEffect(() => {
+    setSelectedTag(initialSelectedTag);
+  }, [initialSelectedTag]);
 
   const handleSortChange = (newSortBy) => {
     setSortBy(newSortBy);
@@ -1322,9 +1359,8 @@ const Work = () => {
   const allTags = [...new Set(works.flatMap((work) => work.tags))];
 
   return (
-    <Box>
-      <Typography level="h1">My Work</Typography>
-      <WorkForm onSubmit={handleAddWork} />
+    <Box sx={{ py: 8 }}>
+      <Typography level="h1" sx={{ mb: 4 }}>My Work</Typography>
       <WorkControls
         sortBy={sortBy}
         onSortChange={handleSortChange}

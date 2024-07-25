@@ -5,19 +5,14 @@ import WorkControls from '../components/WorkControls';
 import WorkDetails from './WorkDetails';
 import portfolioData from '../data/portfolioData';
 
-const Work = ({ initialSelectedTag }) => {
+const Work = ({ initialSelectedTag, animationsEnabled, onAnimationsToggle }) => {
   const [works, setWorks] = useState([]);
   const [sortBy, setSortBy] = useState('relevancy');
   const [selectedTag, setSelectedTag] = useState(initialSelectedTag || '');
-  const [animatedThumbnails, setAnimatedThumbnails] = useState(true);
   const [selectedWork, setSelectedWork] = useState(null);
 
   useEffect(() => {
     setWorks(portfolioData);
-    const savedAnimatedThumbnails = localStorage.getItem('animatedThumbnails');
-    if (savedAnimatedThumbnails !== null) {
-      setAnimatedThumbnails(JSON.parse(savedAnimatedThumbnails));
-    }
   }, []);
 
   useEffect(() => {
@@ -30,12 +25,6 @@ const Work = ({ initialSelectedTag }) => {
 
   const handleTagChange = (tag) => {
     setSelectedTag(tag);
-  };
-
-  const handleAnimatedThumbnailsChange = (event) => {
-    const newValue = event.target.checked;
-    setAnimatedThumbnails(newValue);
-    localStorage.setItem('animatedThumbnails', JSON.stringify(newValue));
   };
 
   const handleWorkClick = (work) => {
@@ -68,12 +57,12 @@ const Work = ({ initialSelectedTag }) => {
         tags={allTags}
         selectedTag={selectedTag}
         onTagChange={handleTagChange}
-        animatedThumbnails={animatedThumbnails}
-        onAnimatedThumbnailsChange={handleAnimatedThumbnailsChange}
+        animationsEnabled={animationsEnabled}
+        onAnimationsToggle={onAnimationsToggle}
       />
       <WorkList 
         works={sortedAndFilteredWorks} 
-        animatedThumbnails={animatedThumbnails} 
+        animatedThumbnails={animationsEnabled} 
         onWorkClick={handleWorkClick}
       />
       <Modal open={!!selectedWork} onClose={handleCloseModal}>
