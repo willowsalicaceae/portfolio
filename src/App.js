@@ -50,7 +50,7 @@ const App = () => {
             </Container>
           </Box>
           <Box id="work" ref={workRef}>
-            <Container maxWidth="lg">
+            <Container maxWidth="xl">
               <Work 
                 initialSelectedTag={selectedTag} 
                 animationsEnabled={animationsEnabled}

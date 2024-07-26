@@ -4,45 +4,40 @@ import AnimatedWillow from '../components/AnimatedWillow';
 
 const Home = ({ onCategoryClick, animationsEnabled }) => {
   return (
-    <Box sx={{ 
+    <Box sx={{
       py: 4,
       minHeight: '75vh',
-      display: 'flex', 
-      flexDirection: 'column', 
+      display: 'flex',
+      flexDirection: 'column',
       justifyContent: 'center'
     }}>
       <Box>
-        <Typography level="h1" sx={{ 
-          mb: 1,
-          fontSize: { xs: '5rem', md: '7rem' },
+        <Typography level="h1" sx={{
+          mb: 2,
+          fontSize: { xs: '2.5rem', md: '3.5rem' },
           lineHeight: 1,
         }}>
           Hi, I'm
         </Typography>
-        <Typography 
-          level="h1" 
-          sx={{ 
-            mb: 2,
+        <Typography
+          level="h1"
+          sx={{
+            mb: 1,
             fontSize: { xs: '5rem', md: '7rem' },
             lineHeight: 1,
             color: 'primary.solidBg',
-            fontFamily: animationsEnabled ? 'inherit' : "'Borel', cursive",
             display: 'flex',
             alignItems: 'center',
-            height: { xs: '5rem', md: '7rem' }, // Match with font size
+            height: { xs: '5rem', md: '7rem' },
           }}
         >
-          {animationsEnabled ? (
-            <AnimatedWillow />
-          ) : (
-            "Willow"
-          )}
+          <AnimatedWillow animate={animationsEnabled} />
         </Typography>
-        <Typography level="h2" sx={{ 
+        <Typography level="h2" sx={{
           fontSize: { xs: '1.25rem', md: '1.75rem' }
         }}>
           I specialize in{' '}
-          <Link 
+          <Link
             component="button"
             onClick={() => onCategoryClick('Video Editing')}
             sx={{ cursor: 'pointer' }}
@@ -50,7 +45,7 @@ const Home = ({ onCategoryClick, animationsEnabled }) => {
             Video Editing
           </Link>
           {' '}and{' '}
-          <Link 
+          <Link
             component="button"
             onClick={() => onCategoryClick('Web Development')}
             sx={{ cursor: 'pointer' }}
