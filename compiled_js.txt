@@ -1,5 +1,5 @@
 <file path="src\App.js">
-import React, { useRef } from 'react';
+import React, { useRef, useState } from 'react';
 import { CssVarsProvider, CssBaseline, Box, Container } from '@mui/joy';
 import Header from './components/Header';
 import Home from './pages/Home';
@@ -12,7 +12,8 @@ const App = () => {
   const workRef = useRef(null);
   const contactRef = useRef(null);
 
-  const [selectedTag, setSelectedTag] = React.useState('');
+  const [selectedTag, setSelectedTag] = useState('');
+  const [animationsEnabled, setAnimationsEnabled] = useState(true);
 
   const scrollTo = (ref) => {
     ref.current.scrollIntoView({ behavior: 'smooth' });
@@ -21,6 +22,10 @@ const App = () => {
   const handleCategoryClick = (category) => {
     setSelectedTag(category);
     scrollTo(workRef);
+  };
+
+  const handleAnimationsToggle = (event) => {
+    setAnimationsEnabled(event.target.checked);
   };
 
   return (
@@ -37,17 +42,21 @@ const App = () => {
         <Header scrollTo={scrollTo} homeRef={homeRef} workRef={workRef} contactRef={contactRef} />
         <Box component="main" sx={{ flexGrow: 1 }}>
           <Box id="home" ref={homeRef} sx={{ 
-            minHeight: '75vh', // Match this with the Home component
+            minHeight: '75vh',
             display: 'flex', 
             alignItems: 'center' 
           }}>
             <Container maxWidth="lg">
-              <Home onCategoryClick={handleCategoryClick} />
+              <Home onCategoryClick={handleCategoryClick} animationsEnabled={animationsEnabled} />
             </Container>
           </Box>
           <Box id="work" ref={workRef}>
-            <Container maxWidth="lg">
-              <Work initialSelectedTag={selectedTag} />
+            <Container maxWidth="xl">
+              <Work 
+                initialSelectedTag={selectedTag} 
+                animationsEnabled={animationsEnabled}
+                onAnimationsToggle={handleAnimationsToggle}
+              />
             </Container>
           </Box>
           <Box id="contact" ref={contactRef}>
@@ -239,6 +248,93 @@ const theme = extendTheme({
 export default theme;
 </file>
 
+<file path="src\components\AnimatedWillow.js">
+import React from 'react';
+import { Box, useTheme } from '@mui/joy';
+
+const AnimatedWillow = ({ animate }) => {
+  const theme = useTheme();
+
+  return (
+    <Box sx={{ position: 'relative' }}>
+      <Box
+        component="svg"
+        viewBox="180 200 1700 500"
+        height="1em"
+        sx={{
+          display: 'inline-block',
+          verticalAlign: 'bottom',
+          overflow: 'visible',
+          '& path': {
+            fill: 'none',
+            stroke: theme.vars.palette.primary.solidBg,
+            strokeLinecap: 'round',
+            strokeLinejoin: 'round',
+            strokeWidth: '36px',
+          },
+        }}
+      >
+        <path className="W" d="M212.86,283.66c-1.61-18.45,31.62-43.39,76.51-43.39,121.7,0-14.79,175.45,1.24,358.6,1.61,18.45,17.29,32.42,27.28,32.42,90.28,0,233.13-354.9,233.13-370.91,0-5.99-.89-7.67-9-7.67-8.64,0-66.99,185.13-56.17,308.79,3.67,41.92,16.15,69.79,33.61,69.79,89.28,0,240.89-258.34,232.29-356.6-3.23-36.91-20.47-34.42-20.47-34.42"
+          style={animate ? {
+            strokeDasharray: 2000,
+            strokeDashoffset: 2000,
+            animation: 'drawW 1s forwards',
+          } : {}}
+        />
+        <path className="illow" d="M698.62,630.66s79.95-48.18,106.76-191.84c0,0-21.34,86.86-21.34,116.57,0,49.09-1.03,76.28,29.29,76.28,89.04,0,236.19-205.78,236.19-333.73,0-25.31-4.03-59.23-43.26-59.23-79.08,0-100.22,312.34-100.22,327.61,0,55.11,31.22,65.72,54.33,65.72,145.22,0,281.11-223.06,281.11-336.5,0-18.22-10.78-56.83-38.11-56.83-87.75,0-105.89,296.53-105.89,322.94,0,60.32,32.25,69.62,56.25,69.62,136.22,0,86.18-175.23,210.97-175.23,115.33,0,84.56,175.25-29.47,175.25-102.99,0-72.86-175.25,29.47-175.25,54.82,0,50.65,31.33,78.56,31.33,48.32,0,56.98-32.67,92.67-32.67,66.67,0-45.33,177.67,46.11,177.67,48,0,72.56-38.33,89.64-133.96,0,0-39.97,132.29,28.36,132.29s91-86.67,91-127,2-52-8.67-52-50.67,34.67,35.67,34.67"
+          style={animate ? {
+            strokeDasharray: 5000,
+            strokeDashoffset: 5000,
+            animation: 'drawIllow 3s forwards .75s',
+          } : {}}
+        />
+        <path className="dot" d="M820.14,352.72c0-.65.43-1.82,1.22-1.82"
+          style={animate ? {
+            strokeDasharray: 100,
+            strokeDashoffset: 100,
+            animation: 'drawDot 0.5s forwards 2.5s',
+          } : {}}
+        />
+        {animate && (
+          <style>
+            {`
+              @keyframes drawW {
+                to { stroke-dashoffset: 0; }
+              }
+              @keyframes drawIllow {
+                to { stroke-dashoffset: 0; }
+              }
+              @keyframes drawDot {
+                to { stroke-dashoffset: 0; }
+              }
+            `}
+          </style>
+        )}
+      </Box>
+      <Box
+        sx={{
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          color: 'transparent',
+          userSelect: 'text',
+          fontSize: 'inherit',
+        }}
+      >
+        Willow
+      </Box>
+    </Box>
+  );
+};
+
+export default AnimatedWillow;
+</file>
+
 <file path="src\components\Header.js">
 import * as React from 'react';
 import { useColorScheme } from '@mui/joy/styles';
@@ -421,10 +517,10 @@ export default TypewriterEffect;
 
 <file path="src\components\WorkControls.js">
 import React from 'react';
-import { Box, Select, Option, Chip, Radio, RadioGroup, FormControl, FormLabel, Checkbox } from '@mui/joy';
+import { Box, Select, Option, Chip, Radio, RadioGroup, FormControl, FormLabel, Switch, Typography } from '@mui/joy';
 import CheckIcon from '@mui/icons-material/Check';
 
-const WorkControls = ({ sortBy, onSortChange, tags, selectedTag, onTagChange, animatedThumbnails, onAnimatedThumbnailsChange }) => {
+const WorkControls = ({ sortBy, onSortChange, tags, selectedTag, onTagChange, animationsEnabled, onAnimationsToggle }) => {
   return (
     <Box sx={{ display: 'flex', gap: 4, alignItems: 'flex-end', mb: 2 }}>
       <FormControl>
@@ -496,11 +592,14 @@ const WorkControls = ({ sortBy, onSortChange, tags, selectedTag, onTagChange, an
         </RadioGroup>
       </FormControl>
       <FormControl>
-        <Checkbox
-          checked={animatedThumbnails}
-          onChange={onAnimatedThumbnailsChange}
-          label="Animated Thumbnails"
-        />
+        <Typography component="label" sx={{ display: 'flex', alignItems: 'center' }}>
+          <Switch 
+            checked={animationsEnabled}
+            onChange={onAnimationsToggle}
+            sx={{ mr: 1 }}
+          />
+          Enable Animations
+        </Typography>
       </FormControl>
     </Box>
   );
@@ -1251,28 +1350,44 @@ export default Contact;
 <file path="src\pages\Home.js">
 import React from 'react';
 import { Box, Typography, Link } from '@mui/joy';
+import AnimatedWillow from '../components/AnimatedWillow';
 
-const Home = ({ onCategoryClick }) => {
+const Home = ({ onCategoryClick, animationsEnabled }) => {
   return (
-    <Box sx={{ 
+    <Box sx={{
       py: 4,
       minHeight: '75vh',
-      display: 'flex', 
-      flexDirection: 'column', 
+      display: 'flex',
+      flexDirection: 'column',
       justifyContent: 'center'
     }}>
       <Box>
-        <Typography level="h1" sx={{ 
-          mb: 1,
-          fontSize: { xs: '2.5rem', md: '3.5rem' }
+        <Typography level="h1" sx={{
+          mb: 2,
+          fontSize: { xs: '2.5rem', md: '3.5rem' },
+          lineHeight: 1,
         }}>
-          Hi, I'm Willow Frazey
+          Hi, I'm
         </Typography>
-        <Typography level="h2" sx={{ 
+        <Typography
+          level="h1"
+          sx={{
+            mb: 1,
+            fontSize: { xs: '5rem', md: '7rem' },
+            lineHeight: 1,
+            color: 'primary.solidBg',
+            display: 'flex',
+            alignItems: 'center',
+            height: { xs: '5rem', md: '7rem' },
+          }}
+        >
+          <AnimatedWillow animate={animationsEnabled} />
+        </Typography>
+        <Typography level="h2" sx={{
           fontSize: { xs: '1.25rem', md: '1.75rem' }
         }}>
           I specialize in{' '}
-          <Link 
+          <Link
             component="button"
             onClick={() => onCategoryClick('Video Editing')}
             sx={{ cursor: 'pointer' }}
@@ -1280,7 +1395,7 @@ const Home = ({ onCategoryClick }) => {
             Video Editing
           </Link>
           {' '}and{' '}
-          <Link 
+          <Link
             component="button"
             onClick={() => onCategoryClick('Web Development')}
             sx={{ cursor: 'pointer' }}
@@ -1304,19 +1419,14 @@ import WorkControls from '../components/WorkControls';
 import WorkDetails from './WorkDetails';
 import portfolioData from '../data/portfolioData';
 
-const Work = ({ initialSelectedTag }) => {
+const Work = ({ initialSelectedTag, animationsEnabled, onAnimationsToggle }) => {
   const [works, setWorks] = useState([]);
   const [sortBy, setSortBy] = useState('relevancy');
   const [selectedTag, setSelectedTag] = useState(initialSelectedTag || '');
-  const [animatedThumbnails, setAnimatedThumbnails] = useState(true);
   const [selectedWork, setSelectedWork] = useState(null);
 
   useEffect(() => {
     setWorks(portfolioData);
-    const savedAnimatedThumbnails = localStorage.getItem('animatedThumbnails');
-    if (savedAnimatedThumbnails !== null) {
-      setAnimatedThumbnails(JSON.parse(savedAnimatedThumbnails));
-    }
   }, []);
 
   useEffect(() => {
@@ -1329,12 +1439,6 @@ const Work = ({ initialSelectedTag }) => {
 
   const handleTagChange = (tag) => {
     setSelectedTag(tag);
-  };
-
-  const handleAnimatedThumbnailsChange = (event) => {
-    const newValue = event.target.checked;
-    setAnimatedThumbnails(newValue);
-    localStorage.setItem('animatedThumbnails', JSON.stringify(newValue));
   };
 
   const handleWorkClick = (work) => {
@@ -1367,12 +1471,12 @@ const Work = ({ initialSelectedTag }) => {
         tags={allTags}
         selectedTag={selectedTag}
         onTagChange={handleTagChange}
-        animatedThumbnails={animatedThumbnails}
-        onAnimatedThumbnailsChange={handleAnimatedThumbnailsChange}
+        animationsEnabled={animationsEnabled}
+        onAnimationsToggle={onAnimationsToggle}
       />
       <WorkList 
         works={sortedAndFilteredWorks} 
-        animatedThumbnails={animatedThumbnails} 
+        animatedThumbnails={animationsEnabled} 
         onWorkClick={handleWorkClick}
       />
       <Modal open={!!selectedWork} onClose={handleCloseModal}>

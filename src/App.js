@@ -1,5 +1,5 @@
 import React, { useRef, useState } from 'react';
-import { CssVarsProvider, CssBaseline, Box, Container } from '@mui/joy';
+import { CssVarsProvider, CssBaseline, Box } from '@mui/joy';
 import Header from './components/Header';
 import Home from './pages/Home';
 import Work from './pages/Work';
@@ -43,25 +43,33 @@ const App = () => {
           <Box id="home" ref={homeRef} sx={{ 
             minHeight: '75vh',
             display: 'flex', 
-            alignItems: 'center' 
+            alignItems: 'center',
+            px: 4,
+            maxWidth: 'lg',
+            mx: 'auto',
+            width: '100%',
           }}>
-            <Container maxWidth="lg">
-              <Home onCategoryClick={handleCategoryClick} animationsEnabled={animationsEnabled} />
-            </Container>
+            <Home onCategoryClick={handleCategoryClick} animationsEnabled={animationsEnabled} />
           </Box>
-          <Box id="work" ref={workRef}>
-            <Container maxWidth="xl">
-              <Work 
-                initialSelectedTag={selectedTag} 
-                animationsEnabled={animationsEnabled}
-                onAnimationsToggle={handleAnimationsToggle}
-              />
-            </Container>
+          <Box id="work" ref={workRef} sx={{
+            px: 4,
+            maxWidth: 'xl',
+            mx: 'auto',
+            width: '100%',
+          }}>
+            <Work 
+              initialSelectedTag={selectedTag} 
+              animationsEnabled={animationsEnabled}
+              onAnimationsToggle={handleAnimationsToggle}
+            />
           </Box>
-          <Box id="contact" ref={contactRef}>
-            <Container maxWidth="lg">
-              <Contact />
-            </Container>
+          <Box id="contact" ref={contactRef} sx={{
+            px: 4,
+            maxWidth: 'lg',
+            mx: 'auto',
+            width: '100%',
+          }}>
+            <Contact />
           </Box>
         </Box>
       </Box>
