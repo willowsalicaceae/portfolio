@@ -1,55 +1,61 @@
 import React, { useState, useEffect } from 'react';
-import { Typography, Stack } from '@mui/joy';
+import { Typography, useTheme } from '@mui/joy';
 
-const TypewriterEffect = ({ lines, onComplete }) => {
-  const [displayedLines, setDisplayedLines] = useState(lines.map(() => ''));
-  const [currentLineIndex, setCurrentLineIndex] = useState(0);
-  const [currentCharIndex, setCurrentCharIndex] = useState(0);
-  const [isPaused, setIsPaused] = useState(false);
+const TypewriterEffect = ({ text, delay, duration, animationsEnabled, typographyProps, highlightWords = [] }) => {
+  const [displayText, setDisplayText] = useState('');
+  const theme = useTheme();
 
   useEffect(() => {
-    if (currentLineIndex >= lines.length) {
-      onComplete && onComplete();
+    if (!animationsEnabled) {
+      setDisplayText(text);
       return;
     }
 
-    const timer = setTimeout(() => {
-      if (isPaused) {
-        setIsPaused(false);
-        setCurrentLineIndex(prev => prev + 1);
-        setCurrentCharIndex(0);
-      } else if (currentCharIndex < lines[currentLineIndex].length) {
-        setDisplayedLines(prev => 
-          prev.map((line, index) => 
-            index === currentLineIndex 
-              ? lines[currentLineIndex].slice(0, currentCharIndex + 1) 
-              : line
-          )
-        );
-        setCurrentCharIndex(prev => prev + 1);
-      } else {
-        setIsPaused(true);
+    let timer;
+    const animateText = () => {
+      for (let i = 0; i <= text.length; i++) {
+        timer = setTimeout(() => {
+          setDisplayText(text.slice(0, i));
+        }, (i / text.length) * duration);
       }
-    }, isPaused ? 250 : 50);
+    };
 
-    return () => clearTimeout(timer);
-  }, [currentLineIndex, currentCharIndex, isPaused, lines, onComplete]);
+    const delayTimer = setTimeout(animateText, delay);
+
+    return () => {
+      clearTimeout(delayTimer);
+      clearTimeout(timer);
+    };
+  }, [text, delay, duration, animationsEnabled]);
+
+  const highlightText = (text) => {
+    let result = [];
+    let lastIndex = 0;
+    highlightWords.forEach(word => {
+      const regex = new RegExp(`(${word})`, 'gi');
+      let match;
+      while ((match = regex.exec(text)) !== null) {
+        if (match.index > lastIndex) {
+          result.push(text.slice(lastIndex, match.index));
+        }
+        result.push(
+          <span key={match.index} style={{ color: theme.vars.palette.primary.main }}>
+            {match[0]}
+          </span>
+        );
+        lastIndex = regex.lastIndex;
+      }
+    });
+    if (lastIndex < text.length) {
+      result.push(text.slice(lastIndex));
+    }
+    return result;
+  };
 
   return (
-    <Stack spacing={2}>
-      {displayedLines.map((line, index) => (
-        <Typography 
-          key={index}
-          level={index === 0 ? "h1" : index === 1 ? "h2" : "h3"}
-          sx={{
-            fontSize: '4rem',
-            fontWeight: 'bold',
-          }}
-        >
-          {line}
-        </Typography>
-      ))}
-    </Stack>
+    <Typography {...typographyProps}>
+      {highlightWords.length > 0 ? highlightText(displayText) : displayText}
+    </Typography>
   );
 };
 
