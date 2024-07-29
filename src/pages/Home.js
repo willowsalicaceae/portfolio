@@ -21,11 +21,11 @@ const Home = ({ onCategoryClick, animationsEnabled }) => {
       width: '100%',
     }}>
       <Box>
-        <TypewriterEffect 
+        <TypewriterEffect
           key={`intro-${key}`}
-          text="Hi, I'm" 
-          delay={0} 
-          duration={500} 
+          text="Hi, I'm"
+          delay={0}
+          duration={500}
           animationsEnabled={animationsEnabled}
           typographyProps={{
             level: "h1",
@@ -37,7 +37,7 @@ const Home = ({ onCategoryClick, animationsEnabled }) => {
             }
           }}
         />
-        
+
         <Typography
           level="h1"
           sx={{
@@ -53,21 +53,21 @@ const Home = ({ onCategoryClick, animationsEnabled }) => {
           <AnimatedWillow key={`willow-${key}`} animate={animationsEnabled} delay={650} />
         </Typography>
 
-        <Box sx={{ 
+        <Box sx={{
           minHeight: '3.5rem',
           display: 'flex',
           flexDirection: 'column',
           justifyContent: 'flex-start',
         }}>
-          <TypewriterLinks 
+          <TypewriterLinks
             key={`specialties-${key}`}
-            text="I specialize in Video Editing and Web Development" 
+            text="I specialize in Video Editing and Web Development"
             links={[
               { word: 'Video Editing', onClick: () => onCategoryClick('Video Editing') },
               { word: 'Web Development', onClick: () => onCategoryClick('Web Development') }
             ]}
-            delay={3000} 
-            duration={2500} 
+            delay={3250}
+            duration={2500}
             animationsEnabled={animationsEnabled}
             onCategoryClick={onCategoryClick}
             typographyProps={{

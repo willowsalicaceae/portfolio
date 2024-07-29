@@ -1,34 +1,31 @@
-import React, { useState } from 'react';
-import { Box, Typography, Input, Textarea, Button, FormControl, FormLabel, Alert } from '@mui/joy';
+import React, { useState, useEffect } from 'react';
+import { Box, Typography, Input, Textarea, Button, FormControl, FormLabel, Modal, ModalDialog } from '@mui/joy';
 
 const Contact = () => {
-  const [isSubmitted, setIsSubmitted] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  useEffect(() => {
+    // Check if there's a submission flag in localStorage
+    const hasSubmitted = localStorage.getItem('formSubmitted');
+    if (hasSubmitted) {
+      setIsModalOpen(true);
+      // Remove the flag from localStorage
+      localStorage.removeItem('formSubmitted');
+    }
+  }, []);
 
   const handleSubmit = (event) => {
-    // We're not preventing default form submission
-    // This allows the form to be submitted normally to Pageclip
-    
-    // Set the submitted state to true
-    setIsSubmitted(true);
-
-    // Use setTimeout to reset the submitted state after 5 seconds
-    setTimeout(() => {
-      setIsSubmitted(false);
-    }, 5000);
+    // Set a flag in localStorage before form submission
+    localStorage.setItem('formSubmitted', 'true');
   };
 
   return (
     <Box sx={{ py: 8 }}>
       <Typography level="h1" sx={{ mb: 4 }}>Contact Me</Typography>
-      {isSubmitted && (
-        <Alert color="success" sx={{ mb: 2 }}>
-          Thank you for your message. I'll get back to you soon!
-        </Alert>
-      )}
-      <Box 
-        component="form" 
-        action="https://send.pageclip.co/lwBVwcXwf4ca0TIcL9Ah5drKTpcSLfFq" 
-        className="pageclip-form" 
+      <Box
+        component="form"
+        action="https://send.pageclip.co/lwBVwcXwf4ca0TIcL9Ah5drKTpcSLfFq"
+        className="pageclip-form"
         method="post"
         onSubmit={handleSubmit}
         sx={{ maxWidth: 500, mx: 'auto' }}
@@ -49,6 +46,13 @@ const Contact = () => {
           Send Message
         </Button>
       </Box>
+      <Modal open={isModalOpen} onClose={() => setIsModalOpen(false)}>
+        <ModalDialog>
+          <Typography level="h2" sx={{ mb: 2 }}>Thank You!</Typography>
+          <Typography>Your message has been successfully sent. I'll get back to you soon!</Typography>
+          <Button onClick={() => setIsModalOpen(false)} sx={{ mt: 2 }}>Close</Button>
+        </ModalDialog>
+      </Modal>
     </Box>
   );
 };
