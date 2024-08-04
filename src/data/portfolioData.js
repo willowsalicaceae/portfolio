@@ -69,7 +69,7 @@ const portfolioData = [
       "Photoshop"
     ],
     "relevancy": 5,
-    "hasVideo": true
+    "hasVideo": false
   },
   {
     "id": "chatbotcemetery",
