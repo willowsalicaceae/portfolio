@@ -182,6 +182,54 @@ const portfolioData = [
     "hasVideo": false
   },
   {
+    "id": "medusa",
+    "subtitle": "UW 2024 WINFO Hackathon",
+    "title": "Medusa",
+    "date": "Feb 7, 2024",
+    "links": [
+      {
+        "name": "Mockup",
+        "url": "https://www.figma.com/proto/uOzW1bkqfAKgXKBki0CTBJ/Medusa?page-id=0%3A1&type=design&node-id=62-294&viewport=-691%2C565%2C0.44&t=OOfpktiYBmZHlFLG-1&scaling=scale-down&starting-point-node-id=62%3A294&show-proto-sidebar=1"
+      },
+      {
+        "name": "Slide Deck",
+        "url": "https://www.figma.com/proto/uOzW1bkqfAKgXKBki0CTBJ/Medusa?node-id=57-213&t=i7W5HoweSWrWiJOU-0&scaling=contain&content-scaling=fixed&page-id=26%3A16"
+      }
+    ],
+    "description": "Created a mockup for an app for protecting artists’ work from AI training databases",
+    "tags": [
+      "Web Development",
+      "School Project"
+    ],
+    "software": [
+      "Figma"
+    ],
+    "relevancy": 6,
+    "hasVideo": false
+  },
+  {
+    "id": "skillrecs",
+    "subtitle": "INFO 360",
+    "title": "SkillRecs",
+    "date": "Oct 1, 2022",
+    "links": [
+      {
+        "name": "Mockup",
+        "url": "https://www.figma.com/proto/vdaAZ5DW5OZ0oVtECFxT7U/INFO-360-Team-Project?node-id=488-41232&t=jvTU90DI9ovBFVd9-0&scaling=scale-down&content-scaling=fixed&page-id=1%3A3&starting-point-node-id=488%3A41232&show-proto-sidebar=1"
+      }
+    ],
+    "description": "Created a mockup for an app for assisting users with customizing their resume and skills",
+    "tags": [
+      "Web Development",
+      "School Project"
+    ],
+    "software": [
+      "Figma"
+    ],
+    "relevancy": 4,
+    "hasVideo": false
+  },
+  {
     "id": "realtalkepisode32",
     "subtitle": "Real Talk. with John Rudnicki",
     "title": "Dealing With Injury and UW Soccer with Levi Hawk",
@@ -204,6 +252,32 @@ const portfolioData = [
     "hasVideo": false
   },
   {
+    "id": "ytvideosharer",
+    "subtitle": "INFO 441",
+    "title": "YT Video Sharer",
+    "date": "Dec 7, 2023",
+    "links": [
+      {
+        "name": "Live Site",
+        "url": "https://ytvideosharer.azurewebsites.net/"
+      },
+      {
+        "name": "GitHub",
+        "url": "https://github.com/zRustyz/info441-YTVideoSharer/tree/master"
+      }
+    ],
+    "description": "Worked with a team to develop a site that integrates YouTube’s API to allow users to share videos",
+    "tags": [
+      "Web Development",
+      "School Project"
+    ],
+    "software": [
+      "Node.js"
+    ],
+    "relevancy": 6,
+    "hasVideo": false
+  },
+  {
     "id": "cornerofmyeye",
     "subtitle": "Dizzy Spins & Landon Sears",
     "title": "Corner of My Eye",
@@ -212,6 +286,10 @@ const portfolioData = [
       {
         "name": "Visualizer",
         "url": "https://www.youtube.com/watch?v=JvJnYMCz4-I"
+      },
+      {
+        "name": "Lyric Video",
+        "url": "https://www.youtube.com/watch?v=xFfTK00ZCgs"
       }
     ],
     "description": "Created visualizer",
