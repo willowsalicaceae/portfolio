@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Box, Typography, Modal, ModalDialog } from '@mui/joy';
+import { Box, Typography, Modal, ModalDialog, ModalClose } from '@mui/joy';
 import WorkList from '../components/WorkList';
 import WorkControls from '../components/WorkControls';
 import WorkDetails from './WorkDetails';
@@ -66,7 +66,15 @@ const Work = ({ initialSelectedTag, animationsEnabled, onAnimationsToggle }) => 
         onWorkClick={handleWorkClick}
       />
       <Modal open={!!selectedWork} onClose={handleCloseModal}>
-        <ModalDialog sx={{ maxWidth: 800, width: '100%' }}>
+        <ModalDialog 
+          sx={{ 
+            maxWidth: 800, 
+            width: '100%', 
+            maxHeight: { xs: '100vh', sm: '90vh' },
+            overflowY: 'auto'
+          }}
+        >
+          <ModalClose />
           {selectedWork && <WorkDetails work={selectedWork} />}
         </ModalDialog>
       </Modal>

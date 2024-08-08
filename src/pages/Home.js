@@ -30,7 +30,7 @@ const Home = ({ onCategoryClick, animationsEnabled }) => {
           typographyProps={{
             level: "h1",
             sx: {
-              mb: 2,
+              mb: { xs: 0, sm: 2 },
               fontSize: { xs: '2.5rem', md: '3.5rem' },
               lineHeight: 1,
               minHeight: '3.5rem',
