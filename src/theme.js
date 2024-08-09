@@ -107,7 +107,11 @@ const theme = extendTheme({
         }
       }
     }
-  }
-})
+  },
+  fontFamily: {
+    display: '"Red Hat Display", "Helvetica", "Arial", sans-serif',
+    body: '"Red Hat Display", "Helvetica", "Arial", sans-serif',
+  },
+});
 
 export default theme;
