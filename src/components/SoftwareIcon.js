@@ -1,7 +1,6 @@
 import React from 'react';
-import { SvgIcon } from '@mui/joy';
+import { SvgIcon, Tooltip } from '@mui/joy';
 
-// Import SVG icons
 import { ReactComponent as ReactIcon } from '../assets/icons/React.svg';
 import { ReactComponent as NodeIcon } from '../assets/icons/Node.js.svg';
 import { ReactComponent as AfterEffectsIcon } from '../assets/icons/After Effects.svg';
@@ -29,9 +28,11 @@ const SoftwareIcon = ({ name, ...props }) => {
   }
 
   return (
-    <SvgIcon {...props} color="inherit">
-      <IconComponent />
-    </SvgIcon>
+    <Tooltip title={name} variant="outlined">
+      <SvgIcon {...props} color="inherit">
+        <IconComponent />
+      </SvgIcon>
+    </Tooltip>
   );
 };
 

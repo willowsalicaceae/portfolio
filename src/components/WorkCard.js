@@ -13,7 +13,7 @@ const WorkCard = ({ work, animatedThumbnails, onWorkClick }) => {
   return (
     <Card
       onClick={() => onWorkClick(work)}
-      variant={theme.breakpoints.down('sm') ? 'plain' : 'outlined'}
+      variant='outlined'
       sx={{
         cursor: 'pointer',
         display: 'flex',
@@ -105,9 +105,7 @@ const WorkCard = ({ work, animatedThumbnails, onWorkClick }) => {
         <Typography level="body2">{work.subtitle}</Typography>
         <Stack direction="row" spacing={1} mt={1}>
           {work.software.map((sw) => (
-            <Tooltip key={sw} title={sw} variant="outlined">
-              <SoftwareIcon name={sw} sx={{ width: 24, height: 24 }} />
-            </Tooltip>
+            <SoftwareIcon key={sw} name={sw} sx={{ width: 24, height: 24 }} />
           ))}
         </Stack>
       </CardContent>
