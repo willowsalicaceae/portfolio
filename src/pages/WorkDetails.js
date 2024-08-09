@@ -1,6 +1,7 @@
 import React from 'react';
-import { Box, Typography, CardContent, CardActions, Chip, Link, Stack, AspectRatio, Button } from '@mui/joy';
+import { Box, Typography, CardContent, CardActions, Chip, Link, Stack, AspectRatio, Button, Tooltip } from '@mui/joy';
 import OpenInNew from '@mui/icons-material/OpenInNew';
+import SoftwareIcon from '../components/SoftwareIcon';
 
 const WorkDetails = ({ work }) => {
   if (!work) {
@@ -95,14 +96,11 @@ const WorkDetails = ({ work }) => {
         <Typography level="title-md" sx={{ mb: 1 }}>
           Software Used:
         </Typography>
-        <Stack direction="row" spacing={1} sx={{ mb: 2 }}>
+        <Stack direction="row" spacing={1} mt={1}>
           {work.software.map((sw) => (
-            <img
-              key={sw}
-              src={`/icons/${sw}.svg`}
-              alt={sw}
-              style={{ width: '24px', height: '24px' }}
-            />
+            <Tooltip key={sw} title={sw} variant="outlined">
+              <SoftwareIcon name={sw} sx={{ width: 24, height: 24 }} />
+            </Tooltip>
           ))}
         </Stack>
       </CardContent>

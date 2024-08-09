@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Card, CardCover, CardContent, Typography, Stack, Skeleton, Tooltip, useTheme } from '@mui/joy';
+import SoftwareIcon from './SoftwareIcon';
 
 const WorkCard = ({ work, animatedThumbnails, onWorkClick }) => {
   const [isLoading, setIsLoading] = useState(true);
@@ -105,11 +106,7 @@ const WorkCard = ({ work, animatedThumbnails, onWorkClick }) => {
         <Stack direction="row" spacing={1} mt={1}>
           {work.software.map((sw) => (
             <Tooltip key={sw} title={sw} variant="outlined">
-              <img
-                src={`/icons/${sw}.svg`}
-                alt={sw}
-                style={{ width: '24px', height: '24px' }}
-              />
+              <SoftwareIcon name={sw} sx={{ width: 24, height: 24 }} />
             </Tooltip>
           ))}
         </Stack>
