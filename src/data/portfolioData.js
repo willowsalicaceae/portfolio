@@ -48,30 +48,6 @@ const portfolioData = [
     "hasVideo": true
   },
   {
-    "id": "falsepermanence",
-    "subtitle": "Dizzy Spins",
-    "title": "False Permanence",
-    "date": "Feb 6, 2024",
-    "links": [
-      {
-        "name": "Visualizer",
-        "url": "https://www.youtube.com/watch?v=-elwaC0Cciw"
-      }
-    ],
-    "description": "Created visualizer",
-    "tags": [
-      "Video Editing",
-      "Visualizer",
-      "Music"
-    ],
-    "software": [
-      "After Effects",
-      "Photoshop"
-    ],
-    "relevancy": 5,
-    "hasVideo": false
-  },
-  {
     "id": "chatbotcemetery",
     "subtitle": "UW INFO 350",
     "title": "Chatbot Cemetery",

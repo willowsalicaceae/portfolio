@@ -4,6 +4,7 @@ import WorkList from '../components/WorkList';
 import WorkControls from '../components/WorkControls';
 import WorkDetails from './WorkDetails';
 import portfolioData from '../data/portfolioData';
+import WorkForm from '../components/WorkForm';
 
 const Work = ({ initialSelectedTag, animationsEnabled, onAnimationsToggle }) => {
   const [works, setWorks] = useState([]);
@@ -51,6 +52,7 @@ const Work = ({ initialSelectedTag, animationsEnabled, onAnimationsToggle }) => 
   return (
     <Box sx={{ pt: 10 }}>
       <Typography level="h1" sx={{ mb: 2 }}>My Work</Typography>
+      {/* <WorkForm onSubmit={(newWorks) => setWorks([...works, ...newWorks])} /> */}
       <WorkControls
         sortBy={sortBy}
         onSortChange={handleSortChange}
