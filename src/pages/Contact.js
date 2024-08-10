@@ -21,7 +21,6 @@ const Contact = () => {
 
   return (
     <Box sx={{ py: 8 }}>
-      <Typography level="h1" sx={{ mb: 4 }}>Contact Me</Typography>
       <Box
         component="form"
         action="https://send.pageclip.co/lwBVwcXwf4ca0TIcL9Ah5drKTpcSLfFq"
@@ -30,6 +29,7 @@ const Contact = () => {
         onSubmit={handleSubmit}
         sx={{ maxWidth: 500, mx: 'auto' }}
       >
+        <Typography level="h1" sx={{ mb: 2 }}>Contact Me</Typography>
         <FormControl sx={{ mb: 2 }}>
           <FormLabel>Name</FormLabel>
           <Input name="name" required />
@@ -48,9 +48,9 @@ const Contact = () => {
       </Box>
       <Modal open={isModalOpen} onClose={() => setIsModalOpen(false)}>
         <ModalDialog>
-          <Typography level="h2" sx={{ mb: 2 }}>Thank You!</Typography>
+          <Typography level="h2">Thank You!</Typography>
           <Typography>Your message has been successfully sent. I'll get back to you soon!</Typography>
-          <Button onClick={() => setIsModalOpen(false)} sx={{ mt: 2 }}>Close</Button>
+          <Button onClick={() => setIsModalOpen(false)} sx={{ mt: 1 }}>Close</Button>
         </ModalDialog>
       </Modal>
     </Box>

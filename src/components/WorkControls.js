@@ -3,7 +3,7 @@ import { Box, Select, Option, Chip, Radio, RadioGroup, FormControl, FormLabel, S
 import CheckIcon from '@mui/icons-material/Check';
 
 const SortControl = ({ sortBy, onSortChange }) => (
-  <FormControl sx={{ flexGrow: 1, minWidth: 0 }}>
+  <FormControl>
     <FormLabel>Sort by</FormLabel>
     <Select value={sortBy} onChange={(e, newValue) => onSortChange(newValue)}>
       <Option value="relevancy">Relevancy</Option>
@@ -12,9 +12,9 @@ const SortControl = ({ sortBy, onSortChange }) => (
   </FormControl>
 );
 
-const TagFilter = ({ selectedTag, onTagChange, tags }) => (
-  <FormControl sx={{ flexGrow: 1, minWidth: 0 }}>
-    <FormLabel>Filter by tag</FormLabel>
+const MobileTagFilter = ({ selectedTag, onTagChange, tags }) => (
+  <FormControl sx={{ display: { xs: 'block', sm: 'none' } }}>
+    <FormLabel>Filter by</FormLabel>
     <Select
       value={selectedTag}
       onChange={(e, newValue) => onTagChange(newValue)}
@@ -29,7 +29,7 @@ const TagFilter = ({ selectedTag, onTagChange, tags }) => (
 
 const DesktopTagFilter = ({ selectedTag, onTagChange, tags }) => (
   <FormControl sx={{ display: { xs: 'none', sm: 'block' } }}>
-    <FormLabel>Filter by tag</FormLabel>
+    <FormLabel>Filter by</FormLabel>
     <RadioGroup
       name="filter-tags"
       value={selectedTag}
@@ -91,18 +91,12 @@ const WorkControls = ({ sortBy, onSortChange, tags, selectedTag, onTagChange, an
   return (
     <Box sx={{ 
       display: 'flex',
-      flexDirection: 'column',
+      flexDirection: { xs: 'column', sm: 'row' },
       gap: 2,
       mb: 2
     }}>
-      <Box sx={{
-        display: 'flex',
-        flexDirection: { xs: 'row', sm: 'column' },
-        gap: 2,
-      }}>
-        <SortControl sortBy={sortBy} onSortChange={onSortChange} />
-        <TagFilter selectedTag={selectedTag} onTagChange={onTagChange} tags={tags} />
-      </Box>
+      <SortControl sortBy={sortBy} onSortChange={onSortChange} />
+      <MobileTagFilter selectedTag={selectedTag} onTagChange={onTagChange} tags={tags} />
       <DesktopTagFilter selectedTag={selectedTag} onTagChange={onTagChange} tags={tags} />
       <AnimationToggle animationsEnabled={animationsEnabled} onAnimationsToggle={onAnimationsToggle} />
     </Box>

@@ -49,8 +49,8 @@ const Work = ({ initialSelectedTag, animationsEnabled, onAnimationsToggle }) => 
   const allTags = [...new Set(works.flatMap((work) => work.tags))];
 
   return (
-    <Box sx={{ py: 8 }}>
-      <Typography level="h1" sx={{ mb: 4 }}>My Work</Typography>
+    <Box sx={{ pt: 10 }}>
+      <Typography level="h1" sx={{ mb: 2 }}>My Work</Typography>
       <WorkControls
         sortBy={sortBy}
         onSortChange={handleSortChange}
