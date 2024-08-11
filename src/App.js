@@ -47,9 +47,9 @@ const App = () => {
         >
           <Header scrollTo={scrollTo} homeRef={homeRef} workRef={workRef} contactRef={contactRef} />
           <Box component="main" sx={{ flexGrow: 1 }}>
-            <Suspense fallback={<div>Loading...</div>}>
+            <Suspense fallback={<div></div>}>
               <Box id="home" ref={homeRef} sx={{
-                height: '85vh', // Changed from minHeight to height
+                height: '85vh',
                 display: 'flex',
                 alignItems: 'center',
                 px: 4,
