@@ -1,42 +1,12 @@
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { Box, Typography, Modal, ModalDialog, ModalClose } from '@mui/joy';
 import WorkList from '../components/WorkList';
 import WorkControls from '../components/WorkControls';
 import WorkDetails from './WorkDetails';
 import portfolioData from '../data/portfolioData';
-import WorkForm from '../components/WorkForm';
 
-const Work = ({ initialSelectedTag, animationsEnabled, onAnimationsToggle }) => {
-  const [works, setWorks] = useState([]);
-  const [sortBy, setSortBy] = useState('relevancy');
-  const [selectedTag, setSelectedTag] = useState(initialSelectedTag || '');
-  const [selectedWork, setSelectedWork] = useState(null);
-
-  useEffect(() => {
-    setWorks(portfolioData);
-  }, []);
-
-  useEffect(() => {
-    setSelectedTag(initialSelectedTag);
-  }, [initialSelectedTag]);
-
-  const handleSortChange = (newSortBy) => {
-    setSortBy(newSortBy);
-  };
-
-  const handleTagChange = (tag) => {
-    setSelectedTag(tag);
-  };
-
-  const handleWorkClick = (work) => {
-    setSelectedWork(work);
-  };
-
-  const handleCloseModal = () => {
-    setSelectedWork(null);
-  };
-
-  const sortedAndFilteredWorks = works
+const sortAndFilterWorks = (works, sortBy, selectedTag) => {
+  return works
     .filter((work) => selectedTag === '' || work.tags.includes(selectedTag))
     .sort((a, b) => {
       if (sortBy === 'relevancy') {
@@ -46,32 +16,62 @@ const Work = ({ initialSelectedTag, animationsEnabled, onAnimationsToggle }) => 
       }
       return 0;
     });
+};
 
-  const allTags = [...new Set(works.flatMap((work) => work.tags))];
+const Work = ({ initialSelectedTag, animationsEnabled, onAnimationsToggle }) => {
+  const [works] = useState(portfolioData);
+  const [controls, setControls] = useState({
+    sortBy: 'relevancy',
+    selectedTag: initialSelectedTag || '',
+  });
+  const [selectedWork, setSelectedWork] = useState(null);
+
+  useEffect(() => {
+    setControls(prev => ({ ...prev, selectedTag: initialSelectedTag }));
+  }, [initialSelectedTag]);
+
+  const handleControlChange = useCallback((key, value) => {
+    setControls(prev => ({ ...prev, [key]: value }));
+  }, []);
+
+  const handleWorkClick = useCallback((work) => {
+    setSelectedWork(work);
+  }, []);
+
+  const handleCloseModal = useCallback(() => {
+    setSelectedWork(null);
+  }, []);
+
+  const sortedAndFilteredWorks = useMemo(() =>
+    sortAndFilterWorks(works, controls.sortBy, controls.selectedTag),
+    [works, controls.sortBy, controls.selectedTag]
+  );
+
+  const allTags = useMemo(() =>
+    [...new Set(works.flatMap((work) => work.tags))],
+    [works]
+  );
 
   return (
     <Box sx={{ pt: 10 }}>
       <Typography level="h1" sx={{ mb: 2 }}>My Work</Typography>
-      {/* <WorkForm onSubmit={(newWorks) => setWorks([...works, ...newWorks])} /> */}
       <WorkControls
-        sortBy={sortBy}
-        onSortChange={handleSortChange}
+        controls={controls}
+        onControlChange={handleControlChange}
         tags={allTags}
-        selectedTag={selectedTag}
-        onTagChange={handleTagChange}
         animationsEnabled={animationsEnabled}
         onAnimationsToggle={onAnimationsToggle}
       />
-      <WorkList 
-        works={sortedAndFilteredWorks} 
-        animatedThumbnails={animationsEnabled} 
+      <WorkList
+        works={sortedAndFilteredWorks}
+        animatedThumbnails={animationsEnabled}
         onWorkClick={handleWorkClick}
       />
       <Modal open={!!selectedWork} onClose={handleCloseModal}>
-        <ModalDialog 
-          sx={{ 
-            maxWidth: 800, 
-            width: '100%', 
+        <ModalDialog
+          sx={{
+            maxWidth: 800,
+            width: '100%',
             maxHeight: { xs: '100vh', sm: '90vh' },
             overflowY: 'auto'
           }}
@@ -84,4 +84,4 @@ const Work = ({ initialSelectedTag, animationsEnabled, onAnimationsToggle }) => 
   );
 };
 
-export default Work;
+export default React.memo(Work);

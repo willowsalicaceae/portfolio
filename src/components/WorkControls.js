@@ -5,7 +5,7 @@ import CheckIcon from '@mui/icons-material/Check';
 const SortControl = ({ sortBy, onSortChange }) => (
   <FormControl>
     <FormLabel>Sort by</FormLabel>
-    <Select value={sortBy} onChange={(e, newValue) => onSortChange(newValue)}>
+    <Select value={sortBy} onChange={(e, newValue) => onSortChange('sortBy', newValue)}>
       <Option value="relevancy">Relevancy</Option>
       <Option value="date">Date</Option>
     </Select>
@@ -17,7 +17,7 @@ const MobileTagFilter = ({ selectedTag, onTagChange, tags }) => (
     <FormLabel>Filter by</FormLabel>
     <Select
       value={selectedTag}
-      onChange={(e, newValue) => onTagChange(newValue)}
+      onChange={(e, newValue) => onTagChange('selectedTag', newValue)}
     >
       <Option value="">All</Option>
       {tags.map((tag) => (
@@ -33,7 +33,7 @@ const DesktopTagFilter = ({ selectedTag, onTagChange, tags }) => (
     <RadioGroup
       name="filter-tags"
       value={selectedTag}
-      onChange={(event) => onTagChange(event.target.value)}
+      onChange={(event) => onTagChange('selectedTag', event.target.value)}
       sx={{
         display: 'flex',
         flexDirection: 'row',
@@ -72,7 +72,7 @@ const FilterChip = ({ value, label, checked }) => (
 const AnimationToggle = ({ animationsEnabled, onAnimationsToggle }) => (
   <FormControl>
     <FormLabel>Animations</FormLabel>
-    <Switch 
+    <Switch
       checked={animationsEnabled}
       onChange={onAnimationsToggle}
       variant="outlined"
@@ -87,17 +87,17 @@ const AnimationToggle = ({ animationsEnabled, onAnimationsToggle }) => (
   </FormControl>
 );
 
-const WorkControls = ({ sortBy, onSortChange, tags, selectedTag, onTagChange, animationsEnabled, onAnimationsToggle }) => {
+const WorkControls = ({ controls, onControlChange, tags, animationsEnabled, onAnimationsToggle }) => {
   return (
-    <Box sx={{ 
+    <Box sx={{
       display: 'flex',
       flexDirection: { xs: 'column', sm: 'row' },
       gap: 2,
       mb: 2
     }}>
-      <SortControl sortBy={sortBy} onSortChange={onSortChange} />
-      <MobileTagFilter selectedTag={selectedTag} onTagChange={onTagChange} tags={tags} />
-      <DesktopTagFilter selectedTag={selectedTag} onTagChange={onTagChange} tags={tags} />
+      <SortControl sortBy={controls.sortBy} onSortChange={onControlChange} />
+      <MobileTagFilter selectedTag={controls.selectedTag} onTagChange={onControlChange} tags={tags} />
+      <DesktopTagFilter selectedTag={controls.selectedTag} onTagChange={onControlChange} tags={tags} />
       <AnimationToggle animationsEnabled={animationsEnabled} onAnimationsToggle={onAnimationsToggle} />
     </Box>
   );

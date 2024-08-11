@@ -13,8 +13,7 @@ const Home = ({ onCategoryClick, animationsEnabled }) => {
 
   return (
     <Box sx={{
-      py: 4,
-      minHeight: '75vh',
+      height: '100%',
       display: 'flex',
       flexDirection: 'column',
       justifyContent: 'center',

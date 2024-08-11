@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
-import { Card, CardCover, CardContent, Typography, Stack, Skeleton, Tooltip, useTheme } from '@mui/joy';
+import { Card, CardCover, CardContent, Typography, Stack, Skeleton } from '@mui/joy';
+import PropTypes from 'prop-types';
 import SoftwareIcon from './SoftwareIcon';
 
-const WorkCard = ({ work, animatedThumbnails, onWorkClick }) => {
+const WorkCard = React.memo(({ work, animatedThumbnails, onWorkClick }) => {
   const [isLoading, setIsLoading] = useState(true);
-  const theme = useTheme();
 
   const handleMediaLoaded = () => {
     setIsLoading(false);
@@ -111,6 +111,18 @@ const WorkCard = ({ work, animatedThumbnails, onWorkClick }) => {
       </CardContent>
     </Card>
   );
+});
+
+WorkCard.propTypes = {
+  work: PropTypes.shape({
+    id: PropTypes.string.isRequired,
+    title: PropTypes.string.isRequired,
+    subtitle: PropTypes.string.isRequired,
+    software: PropTypes.arrayOf(PropTypes.string).isRequired,
+    hasVideo: PropTypes.bool.isRequired,
+  }).isRequired,
+  animatedThumbnails: PropTypes.bool.isRequired,
+  onWorkClick: PropTypes.func.isRequired,
 };
 
 export default WorkCard;

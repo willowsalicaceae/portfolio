@@ -1,10 +1,12 @@
-import React, { useRef, useState } from 'react';
+import React, { useRef, useState, Suspense, lazy } from 'react';
 import { CssVarsProvider, CssBaseline, Box } from '@mui/joy';
 import Header from './components/Header';
-import Home from './pages/Home';
-import Work from './pages/Work';
-import Contact from './pages/Contact';
+import ErrorBoundary from './components/ErrorBoundary';
 import theme from './theme';
+
+const Home = lazy(() => import('./pages/Home'));
+const Work = lazy(() => import('./pages/Work'));
+const Contact = lazy(() => import('./pages/Contact'));
 
 const App = () => {
   const homeRef = useRef(null);
@@ -15,7 +17,11 @@ const App = () => {
   const [animationsEnabled, setAnimationsEnabled] = useState(true);
 
   const scrollTo = (ref) => {
-    ref.current.scrollIntoView({ behavior: 'smooth' });
+    if (ref === homeRef) {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    } else {
+      ref.current.scrollIntoView({ behavior: 'smooth' });
+    }
   };
 
   const handleCategoryClick = (category) => {
@@ -30,49 +36,53 @@ const App = () => {
   return (
     <CssVarsProvider theme={theme} defaultMode="system">
       <CssBaseline />
-      <Box
-        sx={{
-          minHeight: '100vh',
-          bgcolor: 'background.body',
-          display: 'flex',
-          flexDirection: 'column',
-        }}
-      >
-        <Header scrollTo={scrollTo} homeRef={homeRef} workRef={workRef} contactRef={contactRef} />
-        <Box component="main" sx={{ flexGrow: 1 }}>
-          <Box id="home" ref={homeRef} sx={{ 
-            minHeight: '75vh',
-            display: 'flex', 
-            alignItems: 'center',
-            px: 4,
-            maxWidth: 'lg',
-            mx: 'auto',
-            width: '100%',
-          }}>
-            <Home onCategoryClick={handleCategoryClick} animationsEnabled={animationsEnabled} />
-          </Box>
-          <Box id="work" ref={workRef} sx={{
-            px: 4,
-            maxWidth: 'xl',
-            mx: 'auto',
-            width: '100%',
-          }}>
-            <Work 
-              initialSelectedTag={selectedTag} 
-              animationsEnabled={animationsEnabled}
-              onAnimationsToggle={handleAnimationsToggle}
-            />
-          </Box>
-          <Box id="contact" ref={contactRef} sx={{
-            px: 4,
-            maxWidth: 'lg',
-            mx: 'auto',
-            width: '100%',
-          }}>
-            <Contact />
+      <ErrorBoundary>
+        <Box
+          sx={{
+            minHeight: '100vh',
+            bgcolor: 'background.body',
+            display: 'flex',
+            flexDirection: 'column',
+          }}
+        >
+          <Header scrollTo={scrollTo} homeRef={homeRef} workRef={workRef} contactRef={contactRef} />
+          <Box component="main" sx={{ flexGrow: 1 }}>
+            <Suspense fallback={<div>Loading...</div>}>
+              <Box id="home" ref={homeRef} sx={{
+                height: '85vh', // Changed from minHeight to height
+                display: 'flex',
+                alignItems: 'center',
+                px: 4,
+                maxWidth: 'lg',
+                mx: 'auto',
+                width: '100%',
+              }}>
+                <Home onCategoryClick={handleCategoryClick} animationsEnabled={animationsEnabled} />
+              </Box>
+              <Box id="work" ref={workRef} sx={{
+                px: 4,
+                maxWidth: 'xl',
+                mx: 'auto',
+                width: '100%',
+              }}>
+                <Work
+                  initialSelectedTag={selectedTag}
+                  animationsEnabled={animationsEnabled}
+                  onAnimationsToggle={handleAnimationsToggle}
+                />
+              </Box>
+              <Box id="contact" ref={contactRef} sx={{
+                px: 4,
+                maxWidth: 'lg',
+                mx: 'auto',
+                width: '100%',
+              }}>
+                <Contact />
+              </Box>
+            </Suspense>
           </Box>
         </Box>
-      </Box>
+      </ErrorBoundary>
     </CssVarsProvider>
   );
 };
