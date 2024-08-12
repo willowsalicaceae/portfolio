@@ -49,7 +49,7 @@ const App = () => {
           <Box component="main" sx={{ flexGrow: 1 }}>
             <Suspense fallback={<div></div>}>
               <Box id="home" ref={homeRef} sx={{
-                height: '85vh',
+                height: '100vh',
                 display: 'flex',
                 alignItems: 'center',
                 px: 4,

@@ -53,7 +53,7 @@ const Work = ({ initialSelectedTag, animationsEnabled, onAnimationsToggle }) => 
   );
 
   return (
-    <Box sx={{ pt: 10 }}>
+    <Box sx={{ pt: 4 }}>
       <Typography level="h1" sx={{ mb: 2 }}>My Work</Typography>
       <WorkControls
         controls={controls}
