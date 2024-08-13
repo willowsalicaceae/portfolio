@@ -39,7 +39,7 @@ const WorkCard = React.memo(({ work, animatedThumbnails, onWorkClick }) => {
         )}
         {animatedThumbnails && work.hasVideo ? (
           <video
-            src={`/videos/${work.id}.mp4`}
+            src={`${process.env.PUBLIC_URL}/videos/${work.id}.mp4`}
             loop
             muted
             autoPlay
@@ -57,8 +57,8 @@ const WorkCard = React.memo(({ work, animatedThumbnails, onWorkClick }) => {
           />
         ) : (
           <img
-            src={`/images/thumbnails/${work.id}.jpg`}
-            srcSet={`/images/thumbnails/${work.id}.jpg 2x`}
+            src={`${process.env.PUBLIC_URL}/images/thumbnails/${work.id}.jpg`}
+            srcSet={`${process.env.PUBLIC_URL}/images/thumbnails/${work.id}.jpg 2x`}
             loading="lazy"
             alt={work.title}
             style={{

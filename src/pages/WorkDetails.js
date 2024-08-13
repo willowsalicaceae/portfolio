@@ -36,8 +36,8 @@ const WorkDetails = ({ work }) => {
             overlay
           >
             <img
-              src={`/images/thumbnails/${work.id}.jpg`}
-              srcSet={`/images/thumbnails/${work.id}.jpg 2x`}
+              src={`${process.env.PUBLIC_URL}/images/thumbnails/${work.id}.jpg`}
+              srcSet={`${process.env.PUBLIC_URL}/images/thumbnails/${work.id}.jpg 2x`}
               loading="lazy"
               alt={work.title}
               style={{ objectFit: 'cover', width: '100%', height: '100%' }}
