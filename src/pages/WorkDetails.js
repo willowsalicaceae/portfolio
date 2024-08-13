@@ -1,5 +1,5 @@
 import React from 'react';
-import { Box, Typography, CardContent, CardActions, Chip, Link, Stack, AspectRatio, Button, Tooltip } from '@mui/joy';
+import { Box, Typography, CardContent, CardActions, Chip, Link, Stack, AspectRatio, Button } from '@mui/joy';
 import OpenInNew from '@mui/icons-material/OpenInNew';
 import SoftwareIcon from '../components/SoftwareIcon';
 
