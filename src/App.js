@@ -60,7 +60,7 @@ const App = () => {
                 <Home onCategoryClick={handleCategoryClick} animationsEnabled={animationsEnabled} />
               </Box>
               <Box id="work" ref={workRef} sx={{
-                px: 4,
+                px: { xs: 2, sm: 3, md: 4 },
                 maxWidth: 'xl',
                 mx: 'auto',
                 width: '100%',
@@ -72,7 +72,7 @@ const App = () => {
                 />
               </Box>
               <Box id="contact" ref={contactRef} sx={{
-                px: 4,
+                px: { xs: 2, sm: 3, md: 4 },
                 maxWidth: 'lg',
                 mx: 'auto',
                 width: '100%',

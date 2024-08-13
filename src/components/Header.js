@@ -64,7 +64,7 @@ export default function Header({ scrollTo, homeRef, workRef, contactRef }) {
   useEffect(() => {
     const controlNavbar = () => {
       if (typeof window !== 'undefined') {
-        if (window.scrollY > lastScrollY) {
+        if (window.scrollY > lastScrollY && window.scrollY > 100) {
           setVisible(false);
         } else {
           setVisible(true);
