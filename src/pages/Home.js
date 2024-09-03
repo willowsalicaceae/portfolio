@@ -1,15 +1,43 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Box, Typography } from '@mui/joy';
+import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import AnimatedWillow from '../components/AnimatedWillow';
 import TypewriterEffect from '../components/TypewriterEffect';
 import TypewriterLinks from '../components/TypewriterLinks';
 
-const Home = ({ onCategoryClick, animationsEnabled }) => {
+const Home = ({ onCategoryClick, animationsEnabled, scrollTo, workRef }) => {
   const [key, setKey] = useState(0);
+  const [showScrollPrompt, setShowScrollPrompt] = useState(false);
 
   useEffect(() => {
     setKey(prev => prev + 1);
   }, [animationsEnabled]);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      if (window.scrollY < 100) {
+        setShowScrollPrompt(true);
+      }
+    }, 4000);
+
+    const handleScroll = () => {
+      if (window.scrollY >= 100) {
+        setShowScrollPrompt(false);
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll);
+
+    return () => {
+      clearTimeout(timer);
+      window.removeEventListener('scroll', handleScroll);
+    };
+  }, []);
+
+  const handleScrollPromptClick = useCallback(() => {
+    scrollTo(workRef);
+    setShowScrollPrompt(false);
+  }, [scrollTo, workRef]);
 
   return (
     <Box sx={{
@@ -78,6 +106,30 @@ const Home = ({ onCategoryClick, animationsEnabled }) => {
             }}
           />
         </Box>
+      </Box>
+      <Box
+        onClick={handleScrollPromptClick}
+        sx={{
+          position: 'absolute',
+          bottom: 20,
+          left: 0,
+          right: 0,
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          opacity: showScrollPrompt ? 1 : 0,
+          visibility: showScrollPrompt ? 'visible' : 'hidden',
+          transition: 'opacity 0.3s, visibility 0.3s',
+          cursor: 'pointer',
+          '&:hover': {
+            opacity: 0.8,
+          },
+        }}
+      >
+        <Typography level="body-md" color="neutral" sx={{ mb: 1 }}>
+          Scroll down to view my work
+        </Typography>
+        <KeyboardArrowDownIcon />
       </Box>
     </Box>
   );

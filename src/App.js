@@ -57,7 +57,12 @@ const App = () => {
                 mx: 'auto',
                 width: '100%',
               }}>
-                <Home onCategoryClick={handleCategoryClick} animationsEnabled={animationsEnabled} />
+                <Home
+                  onCategoryClick={handleCategoryClick}
+                  animationsEnabled={animationsEnabled}
+                  scrollTo={scrollTo}
+                  workRef={workRef}
+                />
               </Box>
               <Box id="work" ref={workRef} sx={{
                 px: { xs: 2, sm: 3, md: 4 },
