@@ -24,7 +24,7 @@ const Home = ({ onCategoryClick, animationsEnabled }) => {
           key={`intro-${key}`}
           text="Hi, I'm"
           delay={0}
-          duration={500}
+          duration={250}
           animationsEnabled={animationsEnabled}
           typographyProps={{
             level: "h1",
@@ -49,7 +49,7 @@ const Home = ({ onCategoryClick, animationsEnabled }) => {
             height: { xs: '5rem', md: '7rem' },
           }}
         >
-          <AnimatedWillow key={`willow-${key}`} animate={animationsEnabled} delay={650} />
+          <AnimatedWillow key={`willow-${key}`} animate={animationsEnabled} delay={300} />
         </Typography>
 
         <Box sx={{
@@ -65,8 +65,8 @@ const Home = ({ onCategoryClick, animationsEnabled }) => {
               { word: 'Video Editing', onClick: () => onCategoryClick('Video Editing') },
               { word: 'Web Development', onClick: () => onCategoryClick('Web Development') }
             ]}
-            delay={3250}
-            duration={2500}
+            delay={2000}
+            duration={1500}
             animationsEnabled={animationsEnabled}
             onCategoryClick={onCategoryClick}
             typographyProps={{
