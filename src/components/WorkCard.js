@@ -6,9 +6,9 @@ import SoftwareIcon from './SoftwareIcon';
 const WorkCard = React.memo(({ work, animatedThumbnails, onWorkClick }) => {
   const [isLoading, setIsLoading] = useState(true);
 
-  const handleMediaLoaded = () => {
-    setIsLoading(false);
-  };
+  // For debugging - log the attempted image path
+  const imagePath = `/images/thumbnails/${work.id}.jpg`;
+  console.log('Attempting to load image:', imagePath);
 
   return (
     <Card
@@ -53,13 +53,15 @@ const WorkCard = React.memo(({ work, animatedThumbnails, onWorkClick }) => {
               objectFit: 'cover',
               display: isLoading ? 'none' : 'block',
             }}
-            onLoadedData={handleMediaLoaded}
+            onLoadedData={() => setIsLoading(false)}
+            onError={(e) => {
+              console.error('Video load error:', e);
+              setIsLoading(false);
+            }}
           />
         ) : (
           <img
-            src={`${process.env.PUBLIC_URL}/images/thumbnails/${work.id}.jpg`}
-            srcSet={`${process.env.PUBLIC_URL}/images/thumbnails/${work.id}.jpg 2x`}
-            loading="lazy"
+            src={imagePath}
             alt={work.title}
             style={{
               position: 'absolute',
@@ -70,7 +72,11 @@ const WorkCard = React.memo(({ work, animatedThumbnails, onWorkClick }) => {
               objectFit: 'cover',
               display: isLoading ? 'none' : 'block',
             }}
-            onLoad={handleMediaLoaded}
+            onLoad={() => setIsLoading(false)}
+            onError={(e) => {
+              console.error('Image load error:', e);
+              setIsLoading(false);
+            }}
           />
         )}
       </CardCover>
